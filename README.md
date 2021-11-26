@@ -2,7 +2,8 @@
 
 Web Application that allows read data from CAN easily
 
-To compile use: `npm install ` with Node.js installed
+To compile use: `npm install`  with Node.js installed 
+
 To run server: `npm run serve`
 
 ## Assumptions / Functions
@@ -24,14 +25,14 @@ To run server: `npm run serve`
 ## Parameters GUI Widgets
 
 - [x] RPM
-- [ ] RMS+-
+- [x] RMS+-
 - [x] Temperatures
 - [x] Battery
-- [ ] Cells
-- [ ] RTD
+- [x] Cells
+- [x] RTD
 - [x] Brakes
 - [x] Tires
-- [ ] HV
+- [x] HV
 - [x] Dampers
 - [x] Acceleration
 - [ ] Gyro
