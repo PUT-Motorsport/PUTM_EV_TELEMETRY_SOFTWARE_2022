@@ -1,29 +1,29 @@
 # PUTM_EV_TELEMETRY_SOFTWARE_2022
 
-Web Application that allows read and display data from CAN
+Web Application that allows read and display data from CAN  
 
-To start Serial Websocket server:
-On Windows x64: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_windows_amd64\serial-port-json-server.exe`
-On Windows x32: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_windows_386\serial-port-json-server.exe`
-On Linux x32: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_linux_386\serial-port-json-server`
-On Linux x64: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_linux_amd64\serial-port-json-server`
-On ARM: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_linux_arm\serial-port-json-server`
+To start Serial Websocket server:  
+On Windows x64: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_windows_amd64\serial-port-json-server.exe`  
+On Windows x32: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_windows_386\serial-port-json-server.exe`  
+On Linux x32: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_linux_386\serial-port-json-server`  
+On Linux x64: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_linux_amd64\serial-port-json-server`  
+On ARM: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_linux_arm\serial-port-json-server`  
 
 
-Installing on Raspberry Pi:
+Installing on Raspberry Pi:  
 
-Do a wget `https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.96/serial-port-json-server-1.96_linux_arm.tar.gz` from the command line
-Then `gzip -d serial-port-json-server-1.96_linux_arm.tar.gz`
-Then `tar -xvf serial-port-json-server-1.96_linux_arm.tar`
-Then `cd serial-port-json-server-1.96_linux_arm`
-Then `chmod 777 serial-port-json-server` to make sure it's executable
-Then `sudo ./serial-port-json-server -createstartupscript`
-Then `run sudo /etc/init.d/serial-port-json-server start`
-You will now have SPJS (Serial Port JSON Server) start automatically on boot of your Raspberry Pi
+Do a wget `https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.96/serial-port-json-server-1.96_linux_arm.tar.gz` from the command line  
+Then `gzip -d serial-port-json-server-1.96_linux_arm.tar.gz`  
+Then `tar -xvf serial-port-json-server-1.96_linux_arm.tar`  
+Then `cd serial-port-json-server-1.96_linux_arm`  
+Then `chmod 777 serial-port-json-server` to make sure it's executable  
+Then `sudo ./serial-port-json-server -createstartupscript`  
+Then `run sudo /etc/init.d/serial-port-json-server start`  
+You will now have SPJS (Serial Port JSON Server) start automatically on boot of your Raspberry Pi  
 
-To start Web Application go to `./telemetry_app/`
-To compile use: `npm install` (needed internet connection) with Node.js installed
-To run server: `npm run serve`
+To start Web Application go to `./telemetry_app/`  
+To compile use: `npm install` (needed internet connection) with Node.js installed  
+To run server: `npm run serve`  
 
 
 ## Assumptions / Functions
@@ -55,9 +55,9 @@ To run server: `npm run serve`
 - [x] HV
 - [x] Dampers
 - [x] Acceleration
-- [ ] Gyro
-- [ ] Mag
-- [ ] Yaw + Pitch
+- ~~[ ] Gyro
+- ~~[ ] Mag
+- [x] Yaw + Pitch
 - [x] Steering
 
 
