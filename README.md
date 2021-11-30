@@ -55,8 +55,8 @@ To run server: `npm run serve`
 - [x] HV
 - [x] Dampers
 - [x] Acceleration
-- ~~[ ] Gyro
-- ~~[ ] Mag
+- [ ] ~~Gyro~~
+- [ ] ~~Mag~~
 - [x] Yaw + Pitch
 - [x] Steering
 
