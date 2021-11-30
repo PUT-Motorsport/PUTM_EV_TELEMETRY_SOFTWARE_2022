@@ -92,7 +92,7 @@ To run server: `npm run serve`
 - ~~QT~~
 - WebApp
 - ~~REST Express Api~~
-- Vue.js
-- Serial API / nodeserial
+- [Vue.js](https://vuejs.org/v2/guide/)
+- [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
 - ~~MySQL~~
-- socket.io / websocket
+- [Serial Port Json Server](https://github.com/johnlauer/serial-port-json-server)
