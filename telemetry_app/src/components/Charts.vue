@@ -1,14 +1,11 @@
 <template>
-  <div id="charts"></div>
+  <div id="charts" />
 </template>
 
 <script>
 export default {
-  name: 'Channels',
-
-}
+	name: "Channels",
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

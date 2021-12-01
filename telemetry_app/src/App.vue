@@ -1,38 +1,36 @@
 <template>
-  <MainApp msg="Welcome to PUT Motorsport APP"/>
+  <MainApp msg="Welcome to PUT Motorsport APP" />
 </template>
 
 <script>
-import MainApp from './components/MainApp.vue'
+import MainApp from "./components/MainApp.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    MainApp
+    MainApp,
   },
-}
+};
 </script>
 
 <style>
 @font-face {
-    font-family: 'Share Tech Mono';
-    src: url(./assets/ShareTechMono-Regular.ttf) format( 'truetype' );
+  font-family: "Share Tech Mono";
+  src: url(./assets/ShareTechMono-Regular.ttf) format("truetype");
 }
 
-body{
+body {
   background-color: #303030;
   margin: 0;
   overflow: hidden;
-
-
 }
 
 #app {
-  font-family: 'Share Tech Mono', Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Share Tech Mono", Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #FFF;
+  color: #fff;
   background-color: #303030;
   background-image: url(./assets/PUTMLogo2.png);
   background-size: contain;

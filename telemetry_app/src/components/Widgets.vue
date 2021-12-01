@@ -4,11 +4,8 @@
 
 <script>
 export default {
-  name: 'Widgets',
-
-}
+  name: "Widgets",
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
