@@ -3,11 +3,19 @@
     <NavBar />
     <Widgets />
     <Channels />
+    <div v-for="item in inputData" :key="item.id">
+      {{ item.values }}
+    </div>
+    <button @click="openChannelsSettings()">Settings</button>
+    <ChannelsSettings
+      :input-data="inputData"
+      :hidden="channelsSettingsHidden"
+      @isHidden="channelsSettingsHidden = $event"
+    />
     <Charts />
     <div id="connectionBar">
-      <Connection />
+      <Connection @serialOutput="ChangeC($event)" />
     </div>
-    <div id="bottomLine" />
   </div>
 </template>
 
@@ -15,6 +23,7 @@
 import Widgets from "./Widgets.vue";
 import Charts from "./Charts.vue";
 import Channels from "./Channels.vue";
+import ChannelsSettings from "./ChannelsSettings.vue";
 import NavBar from "./NavBar.vue";
 import Connection from "./Connection.vue";
 
@@ -26,23 +35,24 @@ export default {
     Channels,
     Charts,
     Connection,
+    ChannelsSettings,
   },
   data: function () {
-    return {};
+    return { inputData: new Array(), channelsSettingsHidden: true };
+  },
+  methods: {
+    ChangeC(inputData) {
+      this.inputData = inputData;
+    },
+    openChannelsSettings() {
+      this.channelsSettingsHidden = false;
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-#bottomLine {
-  width: 100%;
-  height: 20px;
-  background-color: #5d5d5d;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-}
 #connectionBar {
   position: absolute;
   bottom: 0;

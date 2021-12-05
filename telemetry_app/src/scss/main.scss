@@ -1,0 +1,15 @@
+@import "./_variables.scss";
+
+.standard-box{
+    background-color: $color-background;
+    border: 3px solid $color-blue;
+    border-radius: 10px;
+    &.light{
+        background-color: $color-light
+    }
+}
+
+.closeIcon{
+    content: "&#10006";
+}
+
