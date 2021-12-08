@@ -3,10 +3,10 @@
     <NavBar />
     <Widgets />
     <Channels />
+    <button class="button" @click="openChannelsSettings()">Settings</button>
     <div v-for="item in inputData" :key="item.id">
       {{ item.values }}
     </div>
-    <button @click="openChannelsSettings()">Settings</button>
     <ChannelsSettings
       :input-data="inputData"
       :hidden="channelsSettingsHidden"
@@ -38,7 +38,11 @@ export default {
     ChannelsSettings,
   },
   data: function () {
-    return { inputData: new Array(), channelsSettingsHidden: true };
+    return {
+      inputData: new Array(),
+      channelsSettingsHidden: true,
+      channelsSettings: [],
+    };
   },
   methods: {
     ChangeC(inputData) {

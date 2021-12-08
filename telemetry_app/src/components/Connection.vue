@@ -23,12 +23,23 @@
       &#10006;
     </div>
     <div class="inputs">
+      <input
+        id="baud"
+        v-model="baud"
+        required
+        type="number"
+        name="baud"
+        placeholder="enter baud"
+        class="input"
+        :disabled="serialOn"
+      />
       <select
         id="serialports"
         v-model="serialport"
         required
         name="serialports"
         :disabled="serialOn"
+        class="select"
       >
         <option
           v-for="item in portList"
@@ -40,24 +51,23 @@
           {{ item.full }}
         </option>
       </select>
-      <input
-        id="baud"
-        v-model="baud"
-        required
-        :disabled="serialOn"
-        type="number"
-        name="baud"
-        placeholder="enter baud"
-      />
     </div>
     <div class="buttons">
-      <button :disabled="serialOn" @click="openPort(serialport, baud)">
+      <button
+        class="button"
+        :disabled="serialOn"
+        @click="openPort(serialport, baud)"
+      >
         Open
       </button>
-      <button :disabled="!serialOn" @click="closePort(serialport, baud)">
+      <button
+        class="button"
+        :disabled="!serialOn"
+        @click="closePort(serialport)"
+      >
         Close
       </button>
-      <button @click="clearData()">Clear</button>
+      <button class="button" @click="clearData()">Clear</button>
     </div>
   </div>
 </template>
@@ -73,8 +83,8 @@ export default {
       activePortName: null,
       serialOn: false,
       portList: [],
-      serialport: null,
-      baud: null,
+      serialport: this.getCookie("lastPort"),
+      baud: this.getCookie("lastBaud"),
       isBoxOpened: false,
       setCursor: false,
       setCursorA: false,
@@ -99,25 +109,40 @@ export default {
       this.sendMessage("list");
     };
   },
-  mounted: function () {
-    this.serialport = this.getCookie("lastPort");
-    this.baud = this.getCookie("lastBaud");
-  },
   methods: {
     sendMessage: function (message) {
       console.log(this.connection);
       this.connection.send(message);
     },
-    openPort(port, baud) {
-      console.log(baud.length);
-      if (port.length > 0 && baud.length > 0) {
-        this.sendMessage("open " + port + " " + baud);
-        document.cookie = "lastPort = " + port;
-        document.cookie = "lastBaud = " + baud;
+    openPort() {
+      if (this.serialport.length > 0 && this.baud > 0) {
+        this.sendMessage("open " + this.serialport + " " + this.baud);
+        document.cookie =
+          "lastPort = " +
+          String(this.serialport) +
+          ";" +
+          "expires=" +
+          new Date(
+            new Date().getTime() + 60 * 60 * 1000 * 24 * 365
+          ).toGMTString() +
+          ";path=/";
+        document.cookie =
+          "lastBaud = " +
+          String(this.baud) +
+          ";" +
+          "expires=" +
+          new Date(
+            new Date().getTime() + 60 * 60 * 1000 * 24 * 365
+          ).toGMTString() +
+          ";path=/";
         this.serialOn = true;
+      } else {
+        alert("Enter Data");
       }
+      console.log(this.getCookie("lastBaud"), this.getCookie("lastPort"));
     },
     closePort(port) {
+      console.log("close " + port);
       this.sendMessage("close " + port);
       this.serialOn = false;
     },
@@ -143,6 +168,7 @@ export default {
         document.cookie = "lastBaud=" + currentBaud;
         this.baud = currentBaud;
         this.serialOn = true;
+        this.serialport = activePortName;
       }
     },
     handleJSON(jsonInput) {
@@ -178,7 +204,7 @@ export default {
 <style lang="scss" scoped>
 .hovered {
   cursor: pointer;
-  color: $color-blue;
+  color: $color-active;
 }
 
 #status {
@@ -206,7 +232,7 @@ export default {
       color: $color-light;
 
       &.on {
-        color: $color-red;
+        color: $color-alert;
         animation: blinker 1s linear infinite;
       }
     }
@@ -217,16 +243,21 @@ export default {
   .close {
     width: 100;
     text-align: right;
-    padding: 10px;
+    padding-bottom: 5px;
+    padding-right: 10px;
   }
   .inputs {
     display: flex;
     flex-flow: column nowrap;
+    & > * {
+      margin-top: 5px;
+    }
   }
   .buttons {
+    margin-top: 5px;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: space-around;
+    justify-content: space-between;
     button {
       width: 30%;
     }

@@ -3,39 +3,82 @@
   <div id="settings" :class="{ hidden: hidden }">
     <div class="background">
       <div class="content standard-box light">
+        <div class="top">
+          <div class="save">
+            <button class="button" @click="saveSettings()">Save</button>
+          </div>
+          <div class="close" @click="closeWindow()">
+            <Icon icon="close" :inline="true" />
+          </div>
+        </div>
         <div class="data">
           <table>
             <thead id="header">
               <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>UNIT</th>
-                <th>PRECISION</th>
-                <th>MIN</th>
-                <th>MAX</th>
-                <th>SCALE</th>
+                <th class="ID">ID</th>
+                <th class="NAME">NAME</th>
+                <th class="UNIT">UNIT</th>
+                <th class="PRECISION">PRECISION</th>
+                <th class="MIN">MIN</th>
+                <th class="MAX">MAX</th>
+                <th class="SCALE">SCALE</th>
               </tr>
             </thead>
             <tbody id="channels">
-              <tr v-for="id in channelsIDs" :key="id">
-                <td>{{ id }}</td>
-                <td><input type="text" placeholder="NAME" /></td>
-                <td><input type="text" placeholder="UNIT" /></td>
-                <td><input type="number" placeholder="PRECISION" /></td>
-                <td><input type="number" placeholder="MIN" /></td>
-                <td><input type="number" placeholder="MAX" /></td>
+              <tr v-for="item in settings" :key="item.id">
+                <td>{{ item.id }}</td>
                 <td>
-                  <select>
-                    <option>Linear</option>
-                    <option>Log</option>
+                  <input
+                    v-model="item.name"
+                    class="input"
+                    type="text"
+                    placeholder="NAME"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="item.unit"
+                    class="input"
+                    type="text"
+                    placeholder="UNIT"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="item.precision"
+                    class="input"
+                    type="number"
+                    placeholder="PRECISION"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="item.min"
+                    class="input"
+                    type="number"
+                    placeholder="MIN"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="item.max"
+                    class="input"
+                    type="number"
+                    placeholder="MAX"
+                  />
+                </td>
+                <td>
+                  <select v-model="item.scale" class="select">
+                    <option value="" disabled selected hidden>
+                      Select scale
+                    </option>
+                    <option value="lin">Linear</option>
+                    <option value="log">logarithmic</option>
                   </select>
                 </td>
               </tr>
             </tbody>
           </table>
-        </div>
-        <div class="close" @click="closeWindow()">
-          <Icon icon="close" :inline="true" />
         </div>
       </div>
     </div>
@@ -59,10 +102,11 @@ export default {
       required: true,
     },
     hidden: { type: Boolean, default: false, required: false },
+    inputSettings: { type: Array, default: Array, required: false },
   },
   emits: ["isHidden"],
   data() {
-    return { receivedInput: false, channelsIDs: [], channels: {} };
+    return { receivedInput: false, settings: {} };
   },
   watch: {
     inputData: {
@@ -73,7 +117,7 @@ export default {
         const size = Object.keys(target_copy).length;
         if (size > 0) {
           if (!this.receivedInput) {
-            this.channelsIDs = this.createChannelsList(val);
+            this.settings = this.createChannelsList(val);
           }
           this.receivedInput = true;
         }
@@ -83,18 +127,56 @@ export default {
 
   methods: {
     createChannelsList(inputData) {
+      var channels;
+      /* TODO
+      const cookie = this.getCookie("settings");
+      console.log(this.getCookie("settings"));
+      if (cookie != undefined) {
+        const lastSettings = JSON.parse();
+        if (lastSettings > 0 && !(lastSettings == undefined)) {
+          channels = lastSettings;
+        }
+        console.log(channels);
+      } else { */
       if (inputData.length > 0) {
-        var channels = inputData[0].values;
+        channels = inputData[0].values;
         channels = Object.keys(channels);
-        /* channels = channels.map((x, i) => {
-          return { id: i, value: x };
-        }); */
+        channels = channels.map((x) => {
+          return {
+            id: x,
+            name: "",
+            unit: "",
+            precision: null,
+            min: null,
+            max: null,
+            scale: "",
+          };
+        });
         console.log(channels);
       }
+      //}
+
       return channels;
     },
     closeWindow() {
       this.$emit("isHidden", true);
+    },
+    saveSettings() {
+      document.cookie =
+        "settings = " +
+        JSON.stringify(this.settings) +
+        ";" +
+        "expires=" +
+        new Date(
+          new Date().getTime() + 60 * 60 * 1000 * 24 * 365
+        ).toGMTString() +
+        ";path=/";
+      console.log(this.settings);
+    },
+    getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
     },
   },
 };
@@ -125,14 +207,26 @@ export default {
 
       transform: translate(-50%, -50%);
       display: flex;
-      flex-flow: row nowrap;
+      flex-flow: column nowrap;
+      .top {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        .save {
+          color: $color-background;
+          font-size: $font-md;
+          padding: 10px;
+        }
+      }
 
       .data {
         position: relative;
-        width: 100%;
+        width: calc(100% - 20px);
         margin: 10px;
+        margin-top: 0px;
         overflow: auto;
-        max-height: 100%;
+        height: 100%;
         background-color: $color-main;
 
         border-radius: 10px;
@@ -152,6 +246,10 @@ export default {
           font-size: $font-sm;
           font-weight: 300;
           thead {
+            tr {
+              width: 100%;
+            }
+
             tr,
             th {
               max-height: 30px;
@@ -170,6 +268,32 @@ export default {
               &:last-child {
                 border-radius: 0 10px 0 0;
               }
+            }
+            .ID {
+              width: 2%;
+            }
+            .NAME {
+              width: 10%;
+            }
+
+            .UNIT {
+              width: 3%;
+            }
+
+            .PRECISION {
+              width: 2%;
+            }
+
+            .MIN {
+              width: 3%;
+            }
+
+            .MAX {
+              width: 3%;
+            }
+
+            .SCALE {
+              width: 3%;
             }
           }
           tbody {
