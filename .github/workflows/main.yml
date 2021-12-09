@@ -6,6 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
+              cd telemetry_app
               npm ci
               npm run build
               npm run lint
