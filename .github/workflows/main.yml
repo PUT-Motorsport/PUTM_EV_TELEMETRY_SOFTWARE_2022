@@ -8,5 +8,4 @@ jobs:
       - run: |
               cd telemetry_app
               npm ci
-              npm run build
               npm run lint
