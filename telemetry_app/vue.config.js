@@ -1,9 +1,5 @@
+/* eslint-disable */
 module.exports = {
-  env: {
-    browser: true,
-    es6: true,
-    node: true,
-  },
   css: {
     loaderOptions: {
       scss: {
