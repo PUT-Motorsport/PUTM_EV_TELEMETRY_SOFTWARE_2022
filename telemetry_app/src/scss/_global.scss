@@ -26,9 +26,16 @@ html *{
     align-items: center;
     &:hover{
         color: $color-accent;
+        cursor: pointer;
     }
     &:active{
         color: $color-active;
+    }
+    &:disabled{
+        cursor: default;
+        opacity: 0.7;
+        color: $color-background;
+
     }
 
 }

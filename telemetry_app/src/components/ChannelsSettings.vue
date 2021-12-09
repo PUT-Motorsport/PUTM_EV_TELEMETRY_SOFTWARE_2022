@@ -104,7 +104,7 @@ export default {
     hidden: { type: Boolean, default: false, required: false },
     inputSettings: { type: Array, default: Array, required: false },
   },
-  emits: ["isHidden"],
+  emits: ["isHidden", "channelSettings"],
   data() {
     return { receivedInput: false, settings: {} };
   },
@@ -118,6 +118,7 @@ export default {
         if (size > 0) {
           if (!this.receivedInput) {
             this.settings = this.createChannelsList(val);
+            console.log(this.settings);
           }
           this.receivedInput = true;
         }
@@ -127,17 +128,16 @@ export default {
 
   methods: {
     createChannelsList(inputData) {
-      var channels;
-      /* TODO
       const cookie = this.getCookie("settings");
-      console.log(this.getCookie("settings"));
       if (cookie != undefined) {
-        const lastSettings = JSON.parse();
-        if (lastSettings > 0 && !(lastSettings == undefined)) {
-          channels = lastSettings;
+        const lastSettings = JSON.parse(cookie);
+
+        if (lastSettings != undefined) {
+          return lastSettings;
         }
-        console.log(channels);
-      } else { */
+      }
+      let channels;
+
       if (inputData.length > 0) {
         channels = inputData[0].values;
         channels = Object.keys(channels);
@@ -152,10 +152,8 @@ export default {
             scale: "",
           };
         });
-        console.log(channels);
       }
-      //}
-
+      console.log("NOT COOKIE");
       return channels;
     },
     closeWindow() {
@@ -171,7 +169,7 @@ export default {
           new Date().getTime() + 60 * 60 * 1000 * 24 * 365
         ).toGMTString() +
         ";path=/";
-      console.log(this.settings);
+      this.$emit("channelSettings", this.settings);
     },
     getCookie(name) {
       const value = `; ${document.cookie}`;

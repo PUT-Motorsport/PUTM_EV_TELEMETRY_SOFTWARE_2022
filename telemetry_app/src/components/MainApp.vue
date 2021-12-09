@@ -1,20 +1,27 @@
 <template>
   <div class="container">
-    <NavBar />
-    <Widgets />
-    <Channels />
-    <button class="button" @click="openChannelsSettings()">Settings</button>
-    <div v-for="item in inputData" :key="item.id">
-      {{ item.values }}
-    </div>
-    <ChannelsSettings
-      :input-data="inputData"
-      :hidden="channelsSettingsHidden"
-      @isHidden="channelsSettingsHidden = $event"
-    />
-    <Charts />
-    <div id="connectionBar">
-      <Connection @serialOutput="ChangeC($event)" />
+    <div id="mainGrid">
+      <NavBar id="navBar" />
+      <button id="settingsIcon" @click="openChannelsSettings()">
+        <Icon icon="settings" :inline="true" />
+      </button>
+      <div v-for="item in inputData" :key="item.id">
+        {{ item.values }}
+      </div>
+      <ChannelsSettings
+        :input-data="inputData"
+        :hidden="channelsSettingsHidden"
+        @isHidden="channelsSettingsHidden = $event"
+        @channelSettings="channelsSettings = $event"
+      />
+      <Channels id="channels" />
+      <div id="timeSetting">Lorem</div>
+      <Charts id="charts" />
+      <div id="axis">MAX ----------- 0</div>
+      <Widgets id="widgets" />
+      <div id="connectionBar">
+        <Connection @serialOutput="ChangeC($event)" />
+      </div>
     </div>
   </div>
 </template>
@@ -27,8 +34,13 @@ import ChannelsSettings from "./ChannelsSettings.vue";
 import NavBar from "./NavBar.vue";
 import Connection from "./Connection.vue";
 
+import { Icon, addIcon } from "@iconify/vue";
+import baselineSettings from "@iconify-icons/ic/baseline-settings";
+
+addIcon("settings", baselineSettings);
+
 export default {
-  name: "HelloWorld",
+  name: "MainApp",
   components: {
     NavBar,
     Widgets,
@@ -36,6 +48,7 @@ export default {
     Charts,
     Connection,
     ChannelsSettings,
+    Icon,
   },
   data: function () {
     return {
@@ -55,11 +68,58 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="sass">
+#navBar
+  grid-column: 1 / span 3
+  grid-row: 1 / span 1
+
+#channels
+  grid-column: 1 / span 1
+  grid-row: 1 / span 2
+
+#charts
+  grid-column: 2 / span 1
+  grid-row: 2 / span 1
+
+#widgets
+  grid-column: 1 / span 3
+  grid-row: 4 / span 1
+</style>
 <style lang="scss" scoped>
+#mainGrid {
+  height: 100%;
+  display: grid;
+  grid-template-columns: [first-col] 1fr [second-col] 5fr [end-col] 25px;
+  grid-template-rows: [heading] 30px [first-row] 3fr [second-row] 30px [third-row] 1fr [bottom-bar] 30px;
+  column-gap: 2px;
+  row-gap: 2px;
+}
+
 #connectionBar {
   position: absolute;
   bottom: 0;
   right: 0;
+}
+#settingsIcon {
+  border: none;
+  background-color: transparent;
+  color: $color-main;
+  font-size: $font-xs;
+  &:hover {
+    color: $color-accent;
+    cursor: pointer;
+  }
+  &:active {
+    color: $color-active;
+  }
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+    color: $color-background;
+  }
+}
+
+.container {
+  height: 100%;
 }
 </style>
