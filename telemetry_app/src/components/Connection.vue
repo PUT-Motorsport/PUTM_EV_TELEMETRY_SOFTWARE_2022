@@ -1,48 +1,81 @@
 <template>
-  <div id="connection">
-    <select id="serialports" v-model="serialport" name="serialports">
-      <option
-        v-for="item in portList"
-        :key="item.id"
-        :value="item.val"
-        :selected="item.selected ? 'selected' : ''"
+  <div id="status">
+    <div id="bottomBar">
+      <div
+        id="liveStatus"
+        :class="{ hovered: setCursorA }"
+        @click="openConnectionBox()"
+        @mouseover="setCursorA = true"
+        @mouseleave="setCursorA = false"
       >
-        {{ item.val }} :
-        {{ item.full }}
-      </option>
-    </select>
-    <input
-      id="baud"
-      v-model="baud"
-      :disabled="serialOn"
-      type="number"
-      name="baud"
-      placeholder="enter baud"
-    />
-    <button
-      :disabled="serialOn"
-      @click="
-        openPort(serialport, baud);
-        serialOutput = [];
-      "
+        Live <span class="dot" :class="{ on: serialOn }"> &#11044;</span>
+      </div>
+    </div>
+  </div>
+  <div id="connection" :class="{ closed: !isBoxOpened }">
+    <div
+      class="close"
+      :class="{ hovered: setCursor }"
+      @click="closeConnectionBox()"
+      @mouseover="setCursor = true"
+      @mouseleave="setCursor = false"
     >
-      Open
-    </button>
-    {{ activePortName }}
-    <button :disabled="!serialOn" @click="closePort(serialport, baud)">
-      Close
-    </button>
-    <ol id="outputList">
-      <li v-for="item in serialOutput" :key="item.id" class="output">
-        {{ item.values }}
-      </li>
-    </ol>
+      &#10006;
+    </div>
+    <div class="inputs">
+      <input
+        id="baud"
+        v-model="baud"
+        required
+        type="number"
+        name="baud"
+        placeholder="enter baud"
+        class="input"
+        :disabled="serialOn"
+      />
+      <select
+        id="serialports"
+        v-model="serialport"
+        required
+        name="serialports"
+        :disabled="serialOn"
+        class="select"
+      >
+        <option
+          v-for="item in portList"
+          :key="item.id"
+          :value="item.val"
+          :selected="item.selected ? 'selected' : ''"
+        >
+          {{ item.val }} :
+          {{ item.full }}
+        </option>
+      </select>
+    </div>
+    <div class="buttons">
+      <button
+        class="button"
+        :disabled="serialOn"
+        @click="openPort(serialport, baud)"
+      >
+        Open
+      </button>
+      <button
+        class="button"
+        :disabled="!serialOn"
+        @click="closePort(serialport)"
+      >
+        Close
+      </button>
+      <button class="button" @click="clearData()">Clear</button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "Connection",
+  emits: ["serialOutput", "serialOn"],
   data: function () {
     return {
       serialOutput: [],
@@ -50,13 +83,17 @@ export default {
       activePortName: null,
       serialOn: false,
       portList: [],
-      serialport: null,
-      baud: null,
+      serialport: this.getCookie("lastPort"),
+      baud: this.getCookie("lastBaud"),
+      isBoxOpened: false,
+      setCursor: false,
+      setCursorA: false,
     };
   },
   created: function () {
+    const hostname = window.location.hostname;
     console.log("Starting connection to WebSocket Server");
-    this.connection = new WebSocket("ws://25.99.238.105:8989/ws");
+    this.connection = new WebSocket(`ws://${hostname}:8989/ws`);
     this.connection.onmessage = (event) => {
       try {
         let jsonInput = JSON.parse(event.data.toString());
@@ -72,22 +109,40 @@ export default {
       this.sendMessage("list");
     };
   },
-  mounted: function () {
-    this.serialport = this.getCookie("lastPort");
-    this.baud = this.getCookie("lastBaud");
-  },
   methods: {
     sendMessage: function (message) {
       console.log(this.connection);
       this.connection.send(message);
     },
-    openPort(port, baud) {
-      this.sendMessage("open " + port + " " + baud);
-      document.cookie = "lastPort = " + port;
-      document.cookie = "lastBaud = " + baud;
-      this.serialOn = true;
+    openPort() {
+      if (this.serialport.length > 0 && this.baud > 0) {
+        this.sendMessage("open " + this.serialport + " " + this.baud);
+        document.cookie =
+          "lastPort = " +
+          String(this.serialport) +
+          ";" +
+          "expires=" +
+          new Date(
+            new Date().getTime() + 60 * 60 * 1000 * 24 * 365
+          ).toGMTString() +
+          ";path=/";
+        document.cookie =
+          "lastBaud = " +
+          String(this.baud) +
+          ";" +
+          "expires=" +
+          new Date(
+            new Date().getTime() + 60 * 60 * 1000 * 24 * 365
+          ).toGMTString() +
+          ";path=/";
+        this.serialOn = true;
+      } else {
+        alert("Enter Data");
+      }
+      console.log(this.getCookie("lastBaud"), this.getCookie("lastPort"));
     },
     closePort(port) {
+      console.log("close " + port);
       this.sendMessage("close " + port);
       this.serialOn = false;
     },
@@ -113,6 +168,7 @@ export default {
         document.cookie = "lastBaud=" + currentBaud;
         this.baud = currentBaud;
         this.serialOn = true;
+        this.serialport = activePortName;
       }
     },
     handleJSON(jsonInput) {
@@ -128,15 +184,96 @@ export default {
         const listData = jsonInput["SerialPorts"];
         this.handleSerialList(listData);
       }
+      this.$emit("serialOutput", this.serialOutput);
+    },
+    openConnectionBox() {
+      this.isBoxOpened = true;
+    },
+    closeConnectionBox() {
+      this.isBoxOpened = false;
+    },
+    clearData() {
+      if (confirm("Are you sure you want to clear the data?"))
+        this.serialOutput = [];
+      this.$emit("serialOutput", this.serialOutput);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-#outputList {
-  margin: 0;
-  overflow-y: auto;
-  height: 200px;
+.hovered {
+  cursor: pointer;
+  color: $color-active;
+}
+
+#status {
+  #bottomBar {
+    width: auto;
+    height: 20px;
+    background-color: #5d5d5d;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 4px;
+    padding-right: 15px;
+    padding-left: 10px;
+    #liveStatus {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      margin: 0px;
+    }
+    .dot {
+      position: relative;
+      left: 6px;
+      bottom: 3px;
+      padding: 0px;
+      color: $color-light;
+
+      &.on {
+        color: $color-alert;
+        animation: blinker 1s linear infinite;
+      }
+    }
+  }
+}
+
+#connection {
+  .close {
+    width: 100;
+    text-align: right;
+    padding-bottom: 5px;
+    padding-right: 10px;
+  }
+  .inputs {
+    display: flex;
+    flex-flow: column nowrap;
+    & > * {
+      margin-top: 5px;
+    }
+  }
+  .buttons {
+    margin-top: 5px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    button {
+      width: 30%;
+    }
+  }
+  &.closed {
+    display: none;
+    opacity: 0;
+  }
+  display: block;
+  z-index: 30px;
+  margin-bottom: 30px;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }
 </style>
