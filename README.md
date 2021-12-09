@@ -96,3 +96,4 @@ To run server: `npm run serve`
 - [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
 - ~~MySQL~~
 - [Serial Port Json Server](https://github.com/johnlauer/serial-port-json-server)
+- [Iconify GMI](https://icon-sets.iconify.design/ic/)
