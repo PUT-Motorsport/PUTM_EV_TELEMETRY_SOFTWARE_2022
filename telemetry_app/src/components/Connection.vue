@@ -8,7 +8,14 @@
         @mouseover="setCursorA = true"
         @mouseleave="setCursorA = false"
       >
-        Live <span class="dot" :class="{ on: serialOn }"> &#11044;</span>
+        <span>Live</span>
+
+        <span v-if="serialOn" class="dot on">
+          <font-awesome-icon icon="circle-play" />
+        </span>
+        <span v-if="!serialOn" class="dot">
+          <font-awesome-icon icon="circle-stop" />
+        </span>
       </div>
     </div>
   </div>
@@ -20,7 +27,7 @@
       @mouseover="setCursor = true"
       @mouseleave="setCursor = false"
     >
-      &#10006;
+      <font-awesome-icon icon="xmark" />
     </div>
     <div class="inputs">
       <input
@@ -177,7 +184,7 @@ export default {
         if (jsonInput.length > 0) {
           const vals = jsonInput.split("/").map((x) => Number(x));
           const newitem = { id: Date.now(), values: vals };
-          this.serialOutput.push(newitem);
+          this.serialOutput.unshift(newitem);
         }
       }
       if (typeof jsonInput["SerialPorts"] != "undefined") {
@@ -209,29 +216,26 @@ export default {
 
 #status {
   #bottomBar {
-    width: auto;
-    height: 20px;
+    height: 18px;
     background-color: #5d5d5d;
     position: absolute;
     bottom: 0;
     right: 0;
     padding: 4px;
-    padding-right: 15px;
+    padding-right: 5px;
     padding-left: 10px;
     #liveStatus {
       display: flex;
       flex-flow: row nowrap;
       justify-content: space-between;
+      align-items: center;
       margin: 0px;
     }
     .dot {
-      position: relative;
-      left: 6px;
-      bottom: 3px;
-      padding: 0px;
+      padding-left: 5px;
       color: $color-light;
 
-      &.on {
+      &.on > svg {
         color: $color-alert;
         animation: blinker 1s linear infinite;
       }
@@ -243,7 +247,7 @@ export default {
   .close {
     width: 100;
     text-align: right;
-    padding-bottom: 5px;
+    font-size: $font-sm;
     padding-right: 10px;
   }
   .inputs {

@@ -2,19 +2,22 @@
   <div class="container">
     <div id="mainGrid">
       <NavBar id="navBar" />
-      <button id="settingsIcon" @click="openChannelsSettings()">
-        <Icon icon="settings" :inline="true" />
-      </button>
-      <div v-for="item in inputData" :key="item.id">
-        {{ item.values }}
-      </div>
       <ChannelsSettings
         :input-data="inputData"
         :hidden="channelsSettingsHidden"
         @isHidden="channelsSettingsHidden = $event"
-        @channelSettings="channelsSettings = $event"
+        @channelSettings="updateChannelsSettings($event)"
       />
-      <Channels id="channels" />
+      <div id="channelsSection">
+        <div class="heading">
+          <h3>Channels</h3>
+          <button id="settingsIcon" @click="openChannelsSettings()">
+            <font-awesome-icon :icon="['fas', 'gear']" />
+          </button>
+        </div>
+
+        <Channels :settings="channels.settings" :values="inputData" />
+      </div>
       <div id="timeSetting">Lorem</div>
       <Charts id="charts" />
       <div id="axis">MAX ----------- 0</div>
@@ -34,11 +37,6 @@ import ChannelsSettings from "./ChannelsSettings.vue";
 import NavBar from "./NavBar.vue";
 import Connection from "./Connection.vue";
 
-import { Icon, addIcon } from "@iconify/vue";
-import baselineSettings from "@iconify-icons/ic/baseline-settings";
-
-addIcon("settings", baselineSettings);
-
 export default {
   name: "MainApp",
   components: {
@@ -48,14 +46,22 @@ export default {
     Charts,
     Connection,
     ChannelsSettings,
-    Icon,
   },
   data: function () {
     return {
       inputData: new Array(),
       channelsSettingsHidden: true,
-      channelsSettings: [],
+      channels: { settings: {}, colors: [], visible: [] },
     };
+  },
+  beforeMount: function () {
+    const cookie = this.getCookie("settings");
+    if (cookie != undefined) {
+      const lastSettings = JSON.parse(cookie);
+      if (lastSettings != undefined) {
+        this.channels.settings = lastSettings;
+      }
+    }
   },
   methods: {
     ChangeC(inputData) {
@@ -64,33 +70,83 @@ export default {
     openChannelsSettings() {
       this.channelsSettingsHidden = false;
     },
+    updateChannelsSettings(event) {
+      this.channels.settings = event;
+    },
+    updateChannelsColors(event) {
+      this.channels.colors = event;
+    },
+    updateChannelsVisible(event) {
+      this.channels.visible = event;
+    },
+    getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    },
   },
 };
 </script>
 
-<style lang="sass">
-#navBar
-  grid-column: 1 / span 3
-  grid-row: 1 / span 1
+<style lang="scss">
+#navBar {
+  grid-column: 1 / span 3;
+  grid-row: 1 / span 1;
+}
+#channelsSection {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 2;
 
-#channels
-  grid-column: 1 / span 1
-  grid-row: 1 / span 2
-
-#charts
-  grid-column: 2 / span 1
-  grid-row: 2 / span 1
-
-#widgets
-  grid-column: 1 / span 3
-  grid-row: 4 / span 1
+  background-color: $color-background;
+  border: 3px solid $color-accent;
+  border-width: 0px 2px 2px 0px;
+  border-radius: 0px 0px 10px 0px;
+  .heading {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+    height: 30px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    background-color: $color-dark;
+    align-items: center;
+    h3 {
+      font-size: $font-sm;
+      flex: 5;
+      display: inline-block;
+      text-align: left;
+      margin: 0px;
+      margin-left: 10px;
+    }
+    button {
+      flex: 1;
+      display: inline-block;
+    }
+  }
+}
+#charts {
+  grid-column: 2 / span 1;
+  grid-row: 2 / span 1;
+}
+#widgets {
+  grid-column: 1 / span 3;
+  grid-row: 4 / span 1;
+}
+#timeSetting {
+  grid-column: 1 / span 1;
+  grid-row: 3 / span 1;
+}
+#axis {
+  grid-column: 2 / span 1;
+  grid-row: 3 / span 1;
+}
 </style>
 <style lang="scss" scoped>
 #mainGrid {
   height: 100%;
   display: grid;
-  grid-template-columns: [first-col] 1fr [second-col] 5fr [end-col] 25px;
-  grid-template-rows: [heading] 30px [first-row] 3fr [second-row] 30px [third-row] 1fr [bottom-bar] 30px;
+  grid-template-columns: [first-col] minmax(300px, 1fr) [second-col] 4fr [end-col] 25px;
+  grid-template-rows: [heading] 30px [first-row] 3fr [second-row] 30px [third-row] 1fr [bottom-bar] 28px;
   column-gap: 2px;
   row-gap: 2px;
 }
