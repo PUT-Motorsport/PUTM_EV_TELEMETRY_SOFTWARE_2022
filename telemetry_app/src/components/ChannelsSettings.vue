@@ -5,10 +5,13 @@
       <div class="content standard-box light">
         <div class="top">
           <div class="save">
-            <button class="button" @click="saveSettings()">Save</button>
+            <button class="button" @click="saveSettings()">
+              Save
+              <font-awesome-icon icon="floppy-disk" style="padding-left: 5px" />
+            </button>
           </div>
           <div class="close" @click="closeWindow()">
-            <Icon icon="close" :inline="true" />
+            <font-awesome-icon :icon="['fas', 'xmark']" />
           </div>
         </div>
         <div class="data">
@@ -86,15 +89,8 @@
 </template>
 
 <script>
-import { Icon, addIcon } from "@iconify/vue/dist/offline";
-import close from "@iconify-icons/mdi/close";
-addIcon("close", close);
-
 export default {
   name: "ChannelsSettings",
-  components: {
-    Icon,
-  },
   props: {
     inputData: {
       type: Array,
@@ -160,16 +156,18 @@ export default {
       this.$emit("isHidden", true);
     },
     saveSettings() {
-      document.cookie =
-        "settings = " +
-        JSON.stringify(this.settings) +
-        ";" +
-        "expires=" +
-        new Date(
-          new Date().getTime() + 60 * 60 * 1000 * 24 * 365
-        ).toGMTString() +
-        ";path=/";
-      this.$emit("channelSettings", this.settings);
+      if (this.settings.length > 0) {
+        document.cookie =
+          "settings = " +
+          JSON.stringify(this.settings) +
+          ";" +
+          "expires=" +
+          new Date(
+            new Date().getTime() + 60 * 60 * 1000 * 24 * 365
+          ).toGMTString() +
+          ";path=/";
+        this.$emit("channelSettings", this.settings);
+      }
     },
     getCookie(name) {
       const value = `; ${document.cookie}`;
@@ -333,6 +331,20 @@ export default {
         color: $color-background;
         font-size: $font-md;
         padding: 10px;
+        border: none;
+        background-color: transparent;
+        &:hover {
+          color: $color-accent;
+          cursor: pointer;
+        }
+        &:active {
+          color: $color-active;
+        }
+        &:disabled {
+          cursor: default;
+          opacity: 0.7;
+          color: $color-background;
+        }
       }
     }
   }
