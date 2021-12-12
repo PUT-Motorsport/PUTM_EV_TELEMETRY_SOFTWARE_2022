@@ -9,7 +9,7 @@ jobs:
               cd telemetry_app
               npm ci
               npm run lint
-  create_documantation:
+  create_documentation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,9 +18,21 @@ jobs:
               npm install -g @vuese/cli 
               vuese gen
               dir
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v2
+      - name: Commit files
+        id: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
+          git add --all
+          if [-z "$(git status --porcelain)"]; then
+            echo "::set-output name=push::false"
+          else
+            git commit -m "Add changes" -a
+            echo "::set-output name=push::true"
+          fi
+        shell: bash
+      - name: Push changes
+        if: steps.commit.outputs.push == 'true'
+        uses: ad-m/github-push-action@master
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update Documentation
-          title: Add Documentation
+          github_token: ${{ secrets.GITHUB_TOKEN }}
