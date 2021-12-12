@@ -18,6 +18,7 @@ jobs:
               cd telemetry_app
               npm install -g @vuese/cli 
               vuese gen
+              cd ..
               dir
       - name: Commit files
         id: commit
