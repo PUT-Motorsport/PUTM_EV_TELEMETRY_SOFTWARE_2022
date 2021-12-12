@@ -41,11 +41,13 @@
 export default {
   name: "Channels",
   props: {
+    //Settings of all channels
     settings: {
       type: Object,
       default: Object,
       required: true,
     },
+    //Data from main
     values: {
       type: Array,
       default: Array,
@@ -59,6 +61,8 @@ export default {
   methods: {
     changeVisibility(id) {
       this.visible[id] = !this.visible[id];
+      //Sends data about window visibility
+      //@arg `true` | `false`
       this.$emit("visibility", this.visible);
     },
     colorWindow(id) {

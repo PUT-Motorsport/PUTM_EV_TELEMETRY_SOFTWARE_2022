@@ -82,31 +82,34 @@
 <script>
 export default {
   name: "Connection",
-  emits: ["serialOutput", "serialOn"],
+  emits: ["serialOutput", "clearInputs"],
   data: function () {
     return {
-      serialOutput: [],
+      //Connection object
       connection: null,
-      activePortName: null,
+      //State of serial data input
       serialOn: false,
+      //List of available serial ports
       portList: [],
+      //Chosen serial port
       serialport: this.getCookie("lastPort"),
+      //Serial port frequency
       baud: this.getCookie("lastBaud"),
+      //If COnnection window is opened
       isBoxOpened: false,
+      //Color buttons on hover
       setCursor: false,
       setCursorA: false,
     };
   },
   created: function () {
-    const hostname = window.location.hostname;
     console.log("Starting connection to WebSocket Server");
-    this.connection = new WebSocket(`ws://${hostname}:8989/ws`);
+    this.connection = new WebSocket(`ws://${window.location.hostname}:8989/ws`);
     this.connection.onmessage = (event) => {
       try {
-        let jsonInput = JSON.parse(event.data.toString());
-        this.handleJSON(jsonInput);
+        this.handleJSON(JSON.parse(event.data.toString()));
       } catch (e) {
-        return false;
+        console.log(e);
       }
     };
 
@@ -117,6 +120,9 @@ export default {
     };
   },
   methods: {
+    // @vuese
+    // Sends given message to the echo websocket server
+    //@arg  The message to send
     sendMessage: function (message) {
       console.log(this.connection);
       this.connection.send(message);
@@ -146,10 +152,8 @@ export default {
       } else {
         alert("Enter Data");
       }
-      console.log(this.getCookie("lastBaud"), this.getCookie("lastPort"));
     },
     closePort(port) {
-      console.log("close " + port);
       this.sendMessage("close " + port);
       this.serialOn = false;
     },
@@ -158,6 +162,8 @@ export default {
       const parts = value.split(`; ${name}=`);
       if (parts.length === 2) return parts.pop().split(";").shift();
     },
+    // @vuese
+    // Method for handling incoming message with list of available ports
     handleSerialList(jsonInput) {
       this.portList = jsonInput.map((x, index) => ({
         id: index,
@@ -167,42 +173,41 @@ export default {
       }));
       const activePort = jsonInput.find((element) => element.IsOpen == true);
       if (activePort !== undefined) {
-        const activePortName = activePort.Name;
-        this.activeportName = activePortName;
-        const currentBaud = jsonInput.find(
-          (element) => element.Name == activePortName
+        this.serialport = activePort.Name;
+        this.baud = jsonInput.find(
+          (element) => element.Name == this.serialport
         )["Baud"];
-        document.cookie = "lastBaud=" + currentBaud;
-        this.baud = currentBaud;
+        document.cookie = "lastBaud=" + this.baud;
         this.serialOn = true;
-        this.serialport = activePortName;
       }
     },
+    // @vuese
+    // handling of JSON message with data
     handleJSON(jsonInput) {
       if (typeof jsonInput["D"] != "undefined") {
         jsonInput = jsonInput["D"].replace(" ", "");
         if (jsonInput.length > 0) {
           const vals = jsonInput.split("/").map((x) => Number(x));
-          const newitem = { id: Date.now(), values: vals };
-          this.serialOutput.unshift(newitem);
+          // Send new data do main Array
+          // @arg The argument is an Array with new data
+          this.$emit("serialOutput", { id: Date.now(), values: vals });
         }
       }
-      if (typeof jsonInput["SerialPorts"] != "undefined") {
-        const listData = jsonInput["SerialPorts"];
-        this.handleSerialList(listData);
-      }
-      this.$emit("serialOutput", this.serialOutput);
+      if (typeof jsonInput["SerialPorts"] != "undefined")
+        this.handleSerialList(jsonInput["SerialPorts"]);
     },
     openConnectionBox() {
       this.isBoxOpened = true;
     },
     closeConnectionBox() {
-      this.isBoxOpened = false;
+      if (confirm("Are you sure you want close serial server?"))
+        this.isBoxOpened = false;
     },
     clearData() {
-      if (confirm("Are you sure you want to clear the data?"))
-        this.serialOutput = [];
-      this.$emit("serialOutput", this.serialOutput);
+      if (confirm("Are you sure you want to clear the data?")) {
+        // Send message to clear all serial data
+        this.$emit("clearInputs", true);
+      }
     },
   },
 };

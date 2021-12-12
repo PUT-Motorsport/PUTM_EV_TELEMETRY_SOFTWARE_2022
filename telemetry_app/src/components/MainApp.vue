@@ -23,17 +23,20 @@
       <div id="axis">MAX ----------- 0</div>
       <Widgets id="widgets" />
       <div id="connectionBar">
-        <Connection @serialOutput="ChangeC($event)" />
+        <Connection
+          @serialOutput="addInput($event)"
+          @clearInputs="clearData($event)"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Widgets from "./Widgets.vue";
-import Charts from "./Charts.vue";
-import Channels from "./Channels.vue";
-import ChannelsSettings from "./ChannelsSettings.vue";
+import Widgets from "./Widgets/Widgets.vue";
+import Charts from "./Charts/Charts.vue";
+import Channels from "./Channels/Channels.vue";
+import ChannelsSettings from "./Channels/ChannelsSettings.vue";
 import NavBar from "./NavBar.vue";
 import Connection from "./Connection.vue";
 
@@ -49,13 +52,18 @@ export default {
   },
   data: function () {
     return {
+      //Whole data that comes on serial input
       inputData: new Array(),
+      //If Settings Channel is hidden
       channelsSettingsHidden: true,
+      //Channels Settings
       channels: { settings: {}, colors: [], visible: [] },
     };
   },
   beforeMount: function () {
+    //get last saved settings
     const cookie = this.getCookie("settings");
+    //If doesn't exist, create it
     if (cookie != undefined) {
       const lastSettings = JSON.parse(cookie);
       if (lastSettings != undefined) {
@@ -64,8 +72,19 @@ export default {
     }
   },
   methods: {
-    ChangeC(inputData) {
-      this.inputData = inputData;
+    // @vuese
+    //Adding new data to Array
+    //@arg incoming data
+    addInput(inputData) {
+      this.inputData.unshift(inputData);
+    },
+    // @vuese
+    //Clear all data
+    //@arg just signal `true` | `False`
+    clearData(clear) {
+      if (clear) {
+        this.inputData = [];
+      }
     },
     openChannelsSettings() {
       this.channelsSettingsHidden = false;
