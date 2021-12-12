@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
+      - name: Create Documentation
+        run: |
               cd telemetry_app
               npm install -g @vuese/cli 
               vuese gen
