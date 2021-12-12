@@ -1,4 +1,4 @@
 /* eslint-disable */
 module.exports = {
-  outDir: "docs",
+  outDir: "../docs",
 };
