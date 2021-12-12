@@ -92,13 +92,14 @@
 export default {
   name: "ChannelsSettings",
   props: {
+    //Input serial data from main Array
     inputData: {
       type: Array,
       default: Array,
       required: true,
     },
+    //If channels settings window is hidden
     hidden: { type: Boolean, default: false, required: false },
-    inputSettings: { type: Array, default: Array, required: false },
   },
   emits: ["isHidden", "channelSettings"],
   data() {
@@ -109,8 +110,7 @@ export default {
       immediate: true,
       deep: true,
       handler(val) {
-        const target_copy = Object.assign({}, val);
-        const size = Object.keys(target_copy).length;
+        const size = Object.keys(Object.assign({}, val)).length;
         if (size > 0) {
           if (!this.receivedInput) {
             this.settings = this.createChannelsList(val);
@@ -121,13 +121,11 @@ export default {
       },
     },
   },
-
   methods: {
     createChannelsList(inputData) {
       const cookie = this.getCookie("settings");
       if (cookie != undefined) {
         const lastSettings = JSON.parse(cookie);
-
         if (lastSettings != undefined) {
           return lastSettings;
         }
@@ -153,6 +151,8 @@ export default {
       return channels;
     },
     closeWindow() {
+      //Send message to close the window
+      //@arg `true`
       this.$emit("isHidden", true);
     },
     saveSettings() {
@@ -166,6 +166,8 @@ export default {
             new Date().getTime() + 60 * 60 * 1000 * 24 * 365
           ).toGMTString() +
           ";path=/";
+        //Send current channels settings to application
+        //@arg Array with settings
         this.$emit("channelSettings", this.settings);
       }
     },
