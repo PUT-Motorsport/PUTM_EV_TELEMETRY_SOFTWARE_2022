@@ -9,3 +9,18 @@ jobs:
               cd telemetry_app
               npm ci
               npm run lint
+  create_documantation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+              cd telemetry_app
+              npm install -g @vuese/cli 
+              vuese gen
+              dir
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update Documentation
+          title: Add Documentation
