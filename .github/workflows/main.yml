@@ -24,7 +24,7 @@ jobs:
         uses: s0/git-publish-subdir-action@master
         env:
           REPO: self
-          BRANCH: gh-pages
+          BRANCH: main
           FOLDER: ./
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
