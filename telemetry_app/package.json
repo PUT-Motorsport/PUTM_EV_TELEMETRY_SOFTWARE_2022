@@ -2,7 +2,6 @@
   "name": "telemetry_app",
   "version": "0.2.1",
   "private": true,
-  "description": null,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -20,9 +19,9 @@
     "vue-loader": "^15.9.8"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-babel": "~5.0.0-rc.1",
     "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-service": "~5.0.0-rc.1",
     "@vue/compiler-sfc": "^3.2.26",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
@@ -34,7 +33,6 @@
     "prettier": "^2.2.1",
     "sass": "^1.44.0",
     "sass-loader": "^10.2.0",
-    "vue-cli-plugin-styleguidist": "~4.43.0",
     "webpack": "^4.46.0"
   },
   "eslintConfig": {
