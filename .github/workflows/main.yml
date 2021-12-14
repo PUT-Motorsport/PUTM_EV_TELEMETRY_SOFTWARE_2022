@@ -9,22 +9,3 @@ jobs:
               cd telemetry_app
               npm ci
               npm run lint
-  create_documentation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Create Documentation
-        run: |
-              cd telemetry_app
-              npm install -g @vuese/cli 
-              vuese gen
-              cd ..
-              dir
-      - name: Deploy
-        uses: s0/git-publish-subdir-action@master
-        env:
-          REPO: self
-          BRANCH: main
-          FOLDER: ./
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
