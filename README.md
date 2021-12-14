@@ -97,3 +97,4 @@ To run server: `npm run serve`
 - ~~MySQL~~
 - [Serial Port Json Server](https://github.com/johnlauer/serial-port-json-server)
 - [Iconify GMI](https://icon-sets.iconify.design/ic/)
+- [Vuese](https://vuese.org/)
