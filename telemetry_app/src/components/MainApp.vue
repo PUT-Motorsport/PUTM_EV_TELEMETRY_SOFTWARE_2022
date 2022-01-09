@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div id="mainGrid">
-      <NavBar id="navBar" />
+      <NavBar />
       <ChannelsSettings
         :input-data="inputData"
         :hidden="channelsSettingsHidden"
@@ -16,12 +16,16 @@
           </button>
         </div>
 
-        <Channels :settings="channels.settings" :values="inputData" />
+        <Channels
+          :settings="channels.settings"
+          :values="inputData"
+          @visibility="channels.visible = $event"
+        />
       </div>
       <div id="timeSetting">Lorem</div>
-      <Charts id="charts" />
+      <Charts :values="inputData" :channels-info="channels" />
       <div id="axis">MAX ----------- 0</div>
-      <Widgets id="widgets" />
+      <Widgets />
       <div id="connectionBar">
         <Connection
           @serialOutput="addInput($event)"
@@ -76,7 +80,11 @@ export default {
     //Adding new data to Array
     //@arg incoming data
     addInput(inputData) {
-      this.inputData.unshift(inputData);
+      try {
+        this.inputData.unshift(inputData);
+      } catch (e) {
+        console.error(e);
+      }
     },
     // @vuese
     //Clear all data
@@ -144,7 +152,7 @@ export default {
   }
 }
 #charts {
-  grid-column: 2 / span 1;
+  grid-column: 2 / span 2;
   grid-row: 2 / span 1;
 }
 #widgets {
