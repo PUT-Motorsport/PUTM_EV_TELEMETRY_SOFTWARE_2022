@@ -1,8 +1,13 @@
 <template>
   <div id="charts">
     <div v-for="index in 4" :key="index">
-      <div v-if="channelsInfo.visible[index - 1]" class="singleChart">
+      <div
+        v-if="channelsInfo.visible[index - 1]"
+        class="singleChart"
+        :style="{ 'border-color': channelsInfo.colors[index - 1] }"
+      >
         <ApexChart
+          ref="apexChart"
           :chart-data="channelsData[index - 1]"
           :chart-settings="channelsInfo.settings[index - 1]"
           :chart-color="channelsInfo.colors[index - 1]"
@@ -97,11 +102,12 @@ export default {
 #charts {
   .singleChart {
     position: inherit;
-    border: 2px solid $color-accent;
+    border: 2px solid;
     border-radius: 10px;
     margin: 2px 2px 2px 2px;
   }
   height: 100%;
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 </style>

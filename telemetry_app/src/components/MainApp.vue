@@ -61,7 +61,11 @@ export default {
       //If Settings Channel is hidden
       channelsSettingsHidden: true,
       //Channels Settings
-      channels: { settings: {}, colors: [], visible: [] },
+      channels: {
+        settings: {},
+        colors: ["#f432aa", "#3df52b", "#3322fd", "#f44f11"],
+        visible: [],
+      },
     };
   },
   beforeMount: function () {
