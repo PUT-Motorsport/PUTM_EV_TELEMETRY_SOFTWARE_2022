@@ -100,11 +100,27 @@ export default {
 
 <style lang="scss" scoped>
 #charts {
+  &::-webkit-scrollbar {
+    width: 20px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $color-dark;
+    border-radius: 10px;
+
+    width: 15px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color-light;
+    border-radius: 10px;
+    border: 3px solid $color-dark;
+  }
   .singleChart {
     position: inherit;
     border: 2px solid;
     border-radius: 10px;
     margin: 2px 2px 2px 2px;
+    background-color: $color-background;
   }
   height: 100%;
   overflow-x: hidden;

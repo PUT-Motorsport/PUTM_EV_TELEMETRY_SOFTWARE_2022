@@ -19,7 +19,10 @@
         <Channels
           :settings="channels.settings"
           :values="inputData"
+          :colors-in="channels.colors"
+          :visible="channels.visible"
           @visibility="channels.visible = $event"
+          @colors="channels.colors = $event"
         />
       </div>
       <div id="timeSetting">Lorem</div>
@@ -41,7 +44,7 @@ import Widgets from "./Widgets/Widgets.vue";
 import Charts from "./Charts/Charts.vue";
 import Channels from "./Channels/Channels.vue";
 import ChannelsSettings from "./Channels/ChannelsSettings.vue";
-import NavBar from "./NavBar.vue";
+import NavBar from "./NavBar/NavBar.vue";
 import Connection from "./Connection.vue";
 
 export default {
@@ -64,7 +67,7 @@ export default {
       channels: {
         settings: {},
         colors: ["#f432aa", "#3df52b", "#3322fd", "#f44f11"],
-        visible: [],
+        visible: [false, false, false, false],
       },
     };
   },
@@ -148,6 +151,7 @@ export default {
       text-align: left;
       margin: 0px;
       margin-left: 10px;
+      font-weight: 500;
     }
     button {
       flex: 1;

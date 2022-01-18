@@ -3,7 +3,7 @@
     <div
       ref="nameOfChart"
       class="name"
-      :style="{ 'background-color': chartColor, color: setColor() }"
+      :style="{ 'background-color': chartColor, color: nameColor }"
     >
       {{ chartSettings.name }}
     </div>
@@ -44,6 +44,7 @@ export default {
   },
   data: function () {
     return {
+      nameColor: "white",
       chartOptions: {
         colors: [this.chartColor],
         chart: {
@@ -53,7 +54,7 @@ export default {
             enabled: false,
           },
           toolbar: {
-            show: false,
+            show: true,
           },
         },
         xaxis: {
@@ -137,6 +138,7 @@ export default {
       deep: true,
       handler(newVal) {
         this.handleNewColor(newVal);
+        this.nameColor = this.setColor(newVal);
       },
     },
   },
@@ -153,8 +155,17 @@ export default {
       ];
       return aRgb;
     },
-    setColor() {
-      const bgColor = this.hexToRGB(this.chartColor.substring(1));
+    rgbStrToArr(rgb) {
+      return rgb.substring(5).slice(0, -1).split(",");
+    },
+    setColor(newVal) {
+      let bgColor;
+      if (newVal[0] == "#") {
+        bgColor = this.hexToRGB(newVal.substring(1));
+      } else {
+        bgColor = this.rgbStrToArr(newVal);
+      }
+
       const brightness = Math.round(
         (parseInt(bgColor[0]) * 299 +
           parseInt(bgColor[1]) * 587 +

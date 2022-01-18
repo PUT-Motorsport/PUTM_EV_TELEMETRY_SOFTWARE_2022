@@ -17,6 +17,8 @@
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
     "vue-chart-3": "^3.0.7",
+    "vue-color-kit": "^1.0.5",
+    "vue-color-picker-wheel": "^0.4.3",
     "vue-docgen-cli": "^4.43.0",
     "vue3-apexcharts": "^1.4.1",
     "vue3-charts": "^1.1.27"
