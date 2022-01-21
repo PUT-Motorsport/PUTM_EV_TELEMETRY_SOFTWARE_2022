@@ -8,6 +8,7 @@
       {{ chartSettings.name }}
     </div>
     <apexchart
+      ref="apexchart1"
       width="100%"
       height="200px"
       type="line"
@@ -50,12 +51,32 @@ export default {
         chart: {
           foreColor: "#ffffff",
           id: `vuechart-${this.chartSettings.name.trim()}`,
+          group: "carstats",
           animations: {
-            enabled: false,
+            enabled: true,
+            easing: "linear",
+            dynamicAnimation: {
+              enabled: true,
+              speed: 400,
+            },
           },
           toolbar: {
             show: true,
+            tools: {
+              download: false,
+              selection: true,
+              zoom: false,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+            },
           },
+          zoom: {
+            enabled: true,
+          },
+        },
+        stroke: {
+          curve: "smooth",
         },
         xaxis: {
           type: "numeric",
@@ -93,9 +114,10 @@ export default {
         ],
         //Data Labels options
         tooltip: {
+          autoSelected: "zoom",
           enabled: true,
           shared: false,
-          followCursor: true,
+          followCursor: false,
           intersect: false,
           inverseOrder: false,
           custom: undefined,
@@ -141,6 +163,9 @@ export default {
         this.nameColor = this.setColor(newVal);
       },
     },
+  },
+  update() {
+    this.$refs.apexchart1.$el.click();
   },
   methods: {
     format(val) {
@@ -227,5 +252,12 @@ div.name {
   border-radius: 6px 0px 6px 0px;
   --switch: calc((var(--light) - var(--threshold)) * -100%);
   color: hsl(0, 0%, var(--switch));
+}
+.apexcharts-tooltip,
+.apexcharts-tooltip.active,
+.apexcharts-xaxistooltip,
+.apexcharts-xaxistooltip.active,
+.apexcharts-marker {
+  transition: none;
 }
 </style>
