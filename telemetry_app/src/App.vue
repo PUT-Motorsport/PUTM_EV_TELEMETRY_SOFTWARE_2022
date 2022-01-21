@@ -10,6 +10,23 @@ export default {
   components: {
     MainApp,
   },
+  created() {
+    document.addEventListener("beforeunload", this.handler);
+  },
+  methods: {
+    handler: function handler(e) {
+      alert("ggggrrrr");
+      e = e || window.event;
+
+      // For IE and Firefox prior to version 4
+      if (e) {
+        e.returnValue = "Sure?";
+      }
+
+      // For Safari
+      return "Sure?";
+    },
+  },
 };
 </script>
 
@@ -32,7 +49,7 @@ body {
   text-align: center;
   color: #fff;
   background-color: #303030;
-  background-image: url(./assets/PUTMLogo2.png);
+  background-image: url(./assets/PUTMLogo4.png);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

@@ -1,5 +1,5 @@
 <template>
-  <div id="channels">
+  <div id="channels" ref="channelsSectionObserver">
     <table>
       <thead id="header">
         <tr>
@@ -25,12 +25,25 @@
               style="opacity: 0.7"
             />
           </td>
-          <td @click="colorWindow(item.id)">
+          <td class="colorOpenWindow" @click="colorWindow(item.id)">
             <font-awesome-icon
               icon="square"
               :style="{ color: colors[item.id] }"
             />
           </td>
+          <div
+            v-if="item.id == colorWindowVisible"
+            :style="{
+              top: Math.min(20 * item.id + 60, windowHeight - 338) + 'px',
+              left: channelsWidth + 2 + 'px',
+            }"
+            class="ColorWheel"
+          >
+            <ColorWheel
+              :color-in="colors[item.id]"
+              @color="colors[item.id] = $event"
+            />
+          </div>
         </tr>
       </tbody>
     </table>
@@ -38,8 +51,10 @@
 </template>
 
 <script>
+import ColorWheel from "./ColorWheel.vue";
 export default {
   name: "Channels",
+  components: { ColorWheel },
   props: {
     //Settings of all channels
     settings: {
@@ -53,12 +68,46 @@ export default {
       default: Array,
       required: false,
     },
+    colorsIn: {
+      type: Array,
+      default: Array,
+      required: false,
+    },
   },
-  emits: ["visibility"],
+  emits: ["visibility", "colors"],
   data: function () {
-    return { visible: [], colors: [] };
+    return {
+      visible: [],
+      colors: [],
+      colorWindowVisible: -1,
+      windowHeight: window.innerHeight,
+      channelsWidth: 999,
+    };
+  },
+  watch: {
+    colors: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.$emit("colors", val);
+      },
+    },
+  },
+  mounted() {
+    this.colors = this.colorsIn;
+    this.channelsWidth = this.$refs.channelsSectionObserver.clientWidth;
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize);
+    });
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.onResize);
   },
   methods: {
+    onResize() {
+      this.windowHeight = window.innerHeight;
+      this.channelsWidth = this.$refs.channelsSectionObserver.clientWidth;
+    },
     changeVisibility(id) {
       this.visible[id] = !this.visible[id];
       //Sends data about window visibility
@@ -67,13 +116,21 @@ export default {
     },
     colorWindow(id) {
       //TODO Open color window
-      return id;
+      if (id == this.colorWindowVisible) {
+        this.colorWindowVisible = -1;
+      } else this.colorWindowVisible = id;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.ColorWheel {
+  z-index: 5;
+  position: absolute;
+  /* top: 0;
+  left: 300px; */
+}
 #channels {
   width: 100%;
   height: calc(100% - 32px);
@@ -111,10 +168,12 @@ export default {
       height: 25px;
       tr {
         padding-right: 20px;
-
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
+        th {
+          font-weight: 500;
+        }
         th:nth-child(1) {
           flex: 6;
         }
@@ -168,6 +227,11 @@ export default {
           cursor: pointer;
         }
       }
+    }
+  }
+  .colorOpenWindow {
+    &:hover {
+      cursor: pointer;
     }
   }
 }

@@ -95,7 +95,7 @@ export default {
       serialport: this.getCookie("lastPort"),
       //Serial port frequency
       baud: this.getCookie("lastBaud"),
-      //If COnnection window is opened
+      //If Connection window is opened
       isBoxOpened: false,
       //Color buttons on hover
       setCursor: false,
@@ -109,7 +109,7 @@ export default {
       try {
         this.handleJSON(JSON.parse(event.data.toString()));
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     };
 
@@ -154,8 +154,10 @@ export default {
       }
     },
     closePort(port) {
-      this.sendMessage("close " + port);
-      this.serialOn = false;
+      if (confirm("Are you sure you want close serial server?")) {
+        this.sendMessage("close " + port);
+        this.serialOn = false;
+      }
     },
     getCookie(name) {
       const value = `; ${document.cookie}`;
@@ -184,24 +186,35 @@ export default {
     // @vuese
     // handling of JSON message with data
     handleJSON(jsonInput) {
-      if (typeof jsonInput["D"] != "undefined") {
-        jsonInput = jsonInput["D"].replace(" ", "");
-        if (jsonInput.length > 0) {
-          const vals = jsonInput.split("/").map((x) => Number(x));
-          // Send new data do main Array
-          // @arg The argument is an Array with new data
-          this.$emit("serialOutput", { id: Date.now(), values: vals });
+      try {
+        if (typeof jsonInput["D"] != "undefined") {
+          jsonInput = jsonInput["D"].replace(" ", "");
+          if (jsonInput.length > 0) {
+            try {
+              let vals = jsonInput.split("/").map((x) => Number(x));
+              // Send new data do main Array
+              // @arg The argument is an Array with new data
+              this.$emit("serialOutput", { id: Date.now(), values: vals });
+            } catch (e) {
+              console.error(e);
+            }
+          }
         }
+      } catch (e) {
+        console.error(e);
       }
-      if (typeof jsonInput["SerialPorts"] != "undefined")
-        this.handleSerialList(jsonInput["SerialPorts"]);
+      try {
+        if (typeof jsonInput["SerialPorts"] != "undefined")
+          this.handleSerialList(jsonInput["SerialPorts"]);
+      } catch (e) {
+        console.error(e);
+      }
     },
     openConnectionBox() {
       this.isBoxOpened = true;
     },
     closeConnectionBox() {
-      if (confirm("Are you sure you want close serial server?"))
-        this.isBoxOpened = false;
+      this.isBoxOpened = false;
     },
     clearData() {
       if (confirm("Are you sure you want to clear the data?")) {
@@ -216,7 +229,7 @@ export default {
 <style lang="scss" scoped>
 .hovered {
   cursor: pointer;
-  color: $color-active;
+  color: $color-accent;
 }
 
 #status {

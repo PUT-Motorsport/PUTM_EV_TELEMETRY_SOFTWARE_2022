@@ -5,13 +5,13 @@
 <!-- @vuese:Channels:props:start -->
 |Name|Description|Type|Required|Default|
 |---|---|---|---|---|
-|settings|Settings of all channels|`Object`|`true`|Object|
+|channelsInfo|informations about channels|`Object`|`false`|Object|
 |values|Data from main|`Array`|`false`|Array|
 
 <!-- @vuese:Channels:props:end -->
 
 
-## Events
+s
 
 <!-- @vuese:Channels:events:start -->
 |Event Name|Description|Parameters|

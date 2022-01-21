@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div id="mainGrid">
-      <NavBar id="navBar" />
+      <NavBar />
       <ChannelsSettings
         :input-data="inputData"
         :hidden="channelsSettingsHidden"
@@ -16,12 +16,19 @@
           </button>
         </div>
 
-        <Channels :settings="channels.settings" :values="inputData" />
+        <Channels
+          :settings="channels.settings"
+          :values="inputData"
+          :colors-in="channels.colors"
+          :visible="channels.visible"
+          @visibility="channels.visible = $event"
+          @colors="channels.colors = $event"
+        />
       </div>
       <div id="timeSetting">Lorem</div>
-      <Charts id="charts" />
+      <Charts :values="inputData" :channels-info="channels" />
       <div id="axis">MAX ----------- 0</div>
-      <Widgets id="widgets" />
+      <Widgets />
       <div id="connectionBar">
         <Connection
           @serialOutput="addInput($event)"
@@ -37,7 +44,7 @@ import Widgets from "./Widgets/Widgets.vue";
 import Charts from "./Charts/Charts.vue";
 import Channels from "./Channels/Channels.vue";
 import ChannelsSettings from "./Channels/ChannelsSettings.vue";
-import NavBar from "./NavBar.vue";
+import NavBar from "./NavBar/NavBar.vue";
 import Connection from "./Connection.vue";
 
 export default {
@@ -57,7 +64,11 @@ export default {
       //If Settings Channel is hidden
       channelsSettingsHidden: true,
       //Channels Settings
-      channels: { settings: {}, colors: [], visible: [] },
+      channels: {
+        settings: {},
+        colors: ["#f432aa", "#3df52b", "#3322fd", "#f44f11"],
+        visible: [false, false, false, false],
+      },
     };
   },
   beforeMount: function () {
@@ -76,7 +87,11 @@ export default {
     //Adding new data to Array
     //@arg incoming data
     addInput(inputData) {
-      this.inputData.unshift(inputData);
+      try {
+        this.inputData.unshift(inputData);
+      } catch (e) {
+        console.error(e);
+      }
     },
     // @vuese
     //Clear all data
@@ -136,6 +151,7 @@ export default {
       text-align: left;
       margin: 0px;
       margin-left: 10px;
+      font-weight: 500;
     }
     button {
       flex: 1;
@@ -144,7 +160,7 @@ export default {
   }
 }
 #charts {
-  grid-column: 2 / span 1;
+  grid-column: 2 / span 2;
   grid-row: 2 / span 1;
 }
 #widgets {
