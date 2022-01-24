@@ -1,21 +1,31 @@
 <template>
   <div class="container">
     <div id="mainGrid">
-      <NavBar />
+      <div id="connectionBar">
+        <Connection
+          @serialOutput="addInput($event)"
+          @clearInputs="clearData($event)"
+        />
+      </div>
+      <NavBar @signalSwitch="switchVisibility($event)" />
+
       <ChannelsSettings
+        :class="generalVisible"
         :input-data="inputData"
         :hidden="channelsSettingsHidden"
         @isHidden="channelsSettingsHidden = $event"
         @channelSettings="updateChannelsSettings($event)"
       />
-      <div id="channelsSection">
+
+      <ErrorsFilters :class="errorsVisible" />
+
+      <div id="channelsSection" :class="generalVisible">
         <div class="heading">
           <h3>Channels</h3>
           <button id="settingsIcon" @click="openChannelsSettings()">
             <font-awesome-icon :icon="['fas', 'gear']" />
           </button>
         </div>
-
         <Channels
           :settings="channels.settings"
           :values="inputData"
@@ -25,16 +35,18 @@
           @colors="channels.colors = $event"
         />
       </div>
-      <div id="timeSetting">Lorem</div>
-      <Charts :values="inputData" :channels-info="channels" />
-      <div id="axis">MAX ----------- 0</div>
+
+      <div id="timeSetting" :class="generalVisible">Lorem</div>
+
+      <Errors :class="errorsVisible" />
+      <Charts
+        :class="generalVisible"
+        :values="inputData"
+        :channels-info="channels"
+      />
+
+      <div id="axis" :class="generalVisible">MAX ----------- 0</div>
       <Widgets />
-      <div id="connectionBar">
-        <Connection
-          @serialOutput="addInput($event)"
-          @clearInputs="clearData($event)"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -46,6 +58,8 @@ import Channels from "./Channels/Channels.vue";
 import ChannelsSettings from "./Channels/ChannelsSettings.vue";
 import NavBar from "./NavBar/NavBar.vue";
 import Connection from "./Connection.vue";
+import Errors from "./Errors/Errors.vue";
+import ErrorsFilters from "./Errors/ErrorsFilters.vue";
 
 export default {
   name: "MainApp",
@@ -56,6 +70,8 @@ export default {
     Charts,
     Connection,
     ChannelsSettings,
+    Errors,
+    ErrorsFilters,
   },
   data: function () {
     return {
@@ -69,6 +85,10 @@ export default {
         colors: ["#f432aa", "#3df52b", "#3322fd", "#f44f11"],
         visible: [false, false, false, false],
       },
+      //errors visibility class=
+      errorsVisible: "nonVisible",
+      //everything else visibility class
+      generalVisible: "",
     };
   },
   beforeMount: function () {
@@ -118,13 +138,37 @@ export default {
       const parts = value.split(`; ${name}=`);
       if (parts.length === 2) return parts.pop().split(";").shift();
     },
+    switchVisibility(event) {
+      console.log(event);
+      if (event == "errorSwitch") {
+        this.errorsVisible = "";
+        this.generalVisible = "nonVisible";
+      }
+      if (event == "generalSwitch") {
+        this.errorsVisible = "nonVisible";
+        this.generalVisible = "";
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss">
-#navBar {
+.nonVisible {
+  display: none;
+  opacity: 0;
+}
+#Errors {
   grid-column: 1 / span 3;
+  grid-row: 2 / span 3;
+}
+#errorFilters {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 2;
+}
+#navbar {
+  z-index: 20;
+  grid-column: 2 / span 3;
   grid-row: 1 / span 1;
 }
 #channelsSection {

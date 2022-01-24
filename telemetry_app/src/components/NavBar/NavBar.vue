@@ -1,8 +1,8 @@
 <template>
   <div id="navbar">
     <div class="flexBar">
-      <div>General</div>
-      <div>Errors</div>
+      <div @click="clicked('generalSwitch')">General</div>
+      <div @click="clicked('errorSwitch')">Errors</div>
       <div>+</div>
     </div>
   </div>
@@ -11,6 +11,7 @@
 <script>
 export default {
   name: "NavBar",
+  emits: ["signalSwitch"],
   data: function () {
     return {
       visible: 0,
@@ -19,7 +20,11 @@ export default {
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    clicked(event) {
+      this.$emit("signalSwitch", event);
+    },
+  },
 };
 </script>
 
@@ -38,6 +43,9 @@ export default {
     color: $color-main;
     background-color: $color-dark;
     text-transform: uppercase;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 </style>
