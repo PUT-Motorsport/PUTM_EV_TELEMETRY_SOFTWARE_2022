@@ -1,9 +1,10 @@
 <template>
   <div id="navbar">
     <div class="flexBar">
-      <div>General</div>
-      <div>Errors</div>
-      <div>+</div>
+      <!-- probably TODO automatization of this -->
+      <div :class="generalClass" @click="clicked('generalSwitch')">General</div>
+      <div :class="errorClass" @click="clicked('errorSwitch')">Errors</div>
+      <!-- <div>+</div> -->
     </div>
   </div>
 </template>
@@ -11,15 +12,31 @@
 <script>
 export default {
   name: "NavBar",
+  emits: ["signalSwitch"],
   data: function () {
     return {
       visible: 0,
+      generalClass: "selected",
+      errorClass: "",
     };
   },
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    clicked(event) {
+      this.$emit("signalSwitch", event);
+      //needToChange THAT TODO IMPORTANT
+      if (event == "generalSwitch") {
+        this.generalClass = "selected";
+        this.errorClass = "";
+      }
+      if (event == "errorSwitch") {
+        this.generalClass = "";
+        this.errorClass = "selected";
+      }
+    },
+  },
 };
 </script>
 
@@ -38,6 +55,13 @@ export default {
     color: $color-main;
     background-color: $color-dark;
     text-transform: uppercase;
+    &:hover {
+      cursor: pointer;
+    }
   }
+}
+
+div.selected {
+  color: $color-active;
 }
 </style>
