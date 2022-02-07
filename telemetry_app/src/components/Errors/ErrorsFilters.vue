@@ -34,4 +34,139 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#filtersSection {
+  background-color: $color-background;
+  border: 3px solid $color-accent;
+  border-width: 0px 2px 2px 0px;
+  border-radius: 0px 0px 10px 0px;
+  .heading {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+    height: 30px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    background-color: $color-dark;
+    align-items: center;
+    h3 {
+      font-size: $font-sm;
+      flex: 5;
+      display: inline-block;
+      text-align: left;
+      margin: 0px;
+      margin-left: 10px;
+      font-weight: 500;
+    }
+    button {
+      flex: 1;
+      display: inline-block;
+    }
+  }
+}
+
+#channels {
+  width: 100%;
+  height: calc(100% - 32px);
+
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  ::-webkit-scrollbar {
+    width: 20px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: $color-dark;
+    border-radius: 0px 0px 7px 0px;
+
+    width: 15px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: $color-light;
+    border-radius: 10px;
+    border: 3px solid $color-dark;
+  }
+
+  table {
+    border-radius: 0px 0px 7px 0px;
+
+    margin-top: 2px;
+    border-spacing: 0;
+    width: 100%;
+    height: 100%;
+
+    thead {
+      background-color: $color-dark;
+      height: 25px;
+      tr {
+        padding-right: 20px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        th {
+          font-weight: 500;
+        }
+        th:nth-child(1) {
+          flex: 6;
+        }
+        th:nth-child(2) {
+          flex: 5;
+        }
+        th:nth-child(3) {
+          flex: 1;
+        }
+        th:nth-child(4) {
+          flex: 1;
+        }
+      }
+    }
+    tbody {
+      background-color: $color-background;
+      display: block;
+      width: 100%;
+      overflow-y: scroll;
+      height: 100%;
+      border-radius: 0px 0px 7px 0px;
+
+      tr {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        td:nth-child(1) {
+          flex: 6;
+        }
+        td:nth-child(2) {
+          flex: 5;
+        }
+        td:nth-child(3) {
+          flex: 1;
+        }
+        td:nth-child(4) {
+          flex: 1;
+        }
+      }
+    }
+    th {
+      padding: 5px 5px;
+    }
+    td {
+      height: 15px;
+      overflow: hidden;
+      padding: 5px 5px;
+
+      &.visibility {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .colorOpenWindow {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+</style>
