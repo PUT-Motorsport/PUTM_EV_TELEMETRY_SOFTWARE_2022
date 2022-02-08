@@ -7,6 +7,7 @@
           @clearInputs="clearData($event)"
         />
       </div>
+      <div id="downloadBar"><Download :data="inputData" /></div>
       <NavBar @signalSwitch="switchVisibility($event)" />
 
       <ChannelsSettings
@@ -38,7 +39,11 @@
 
       <div id="timeSetting" :class="generalVisible">Lorem</div>
 
-      <Errors :class="errorsVisible" />
+      <Errors
+        :class="errorsVisible"
+        :values="inputData"
+        :channel-settings="channels.settings"
+      />
       <Charts
         :class="generalVisible"
         :values="inputData"
@@ -60,6 +65,7 @@ import NavBar from "./NavBar/NavBar.vue";
 import Connection from "./Connection.vue";
 import Errors from "./Errors/Errors.vue";
 import ErrorsFilters from "./Errors/ErrorsFilters.vue";
+import Download from "./Download.vue";
 
 export default {
   name: "MainApp",
@@ -72,6 +78,7 @@ export default {
     ChannelsSettings,
     Errors,
     ErrorsFilters,
+    Download,
   },
   data: function () {
     return {
@@ -82,9 +89,18 @@ export default {
       //Channels Settings
       channels: {
         settings: {},
-        colors: ["#f432aa", "#3df52b", "#3322fd", "#f44f11"],
-        visible: [false, false, false, false],
+        colors: [
+          "#f432aa",
+          "#3df52b",
+          "#3322fd",
+          "#f44f11",
+          "#f44f11",
+          "#e49f11",
+        ],
+        visible: [false, false, false, false, false, false],
       },
+
+      //TODO change for more dynamic method
       //errors visibility class=
       errorsVisible: "nonVisible",
       //everything else visibility class
@@ -106,9 +122,10 @@ export default {
     // @vuese
     //Adding new data to Array
     //@arg incoming data
-    addInput(inputData) {
+    addInput(incomingData) {
       try {
-        this.inputData.unshift(inputData);
+        //TODO change to push
+        this.inputData.unshift(incomingData);
       } catch (e) {
         console.error(e);
       }
@@ -125,7 +142,11 @@ export default {
       this.channelsSettingsHidden = false;
     },
     updateChannelsSettings(event) {
-      this.channels.settings = event;
+      try {
+        this.channels.settings = event;
+      } catch (error) {
+        console.error(error);
+      }
     },
     updateChannelsColors(event) {
       this.channels.colors = event;
@@ -228,6 +249,13 @@ export default {
   grid-template-rows: [heading] 30px [first-row] 3fr [second-row] 30px [third-row] 1fr [bottom-bar] 28px;
   column-gap: 2px;
   row-gap: 2px;
+}
+
+#downloadBar {
+  position: absolute;
+  bottom: 0;
+  right: 200px;
+  height: 20px;
 }
 
 #connectionBar {
