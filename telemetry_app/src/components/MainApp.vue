@@ -42,7 +42,7 @@
       <Errors
         :class="errorsVisible"
         :values="inputData"
-        :channelSettings="channels.settings"
+        :channel-settings="channels.settings"
       />
       <Charts
         :class="generalVisible"
