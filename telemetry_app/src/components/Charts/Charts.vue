@@ -1,8 +1,11 @@
 <template>
   <div id="charts">
-    <div v-for="index in 4" :key="index">
+    <div v-for="index in channelsData.length + 1" :key="index">
       <div
-        v-if="channelsInfo.visible[index - 1]"
+        v-if="
+          channelsInfo.visible[index - 1] &&
+          !channelsInfo.settings[index - 1].iserror
+        "
         class="singleChart"
         :style="{ 'border-color': channelsInfo.colors[index - 1] }"
       >
@@ -40,15 +43,6 @@ export default {
   data() {
     return {
       channelsData: [],
-      plByMonth: [
-        { name: "Jan", pl: 1000, avg: 500, inc: 300 },
-        { name: "Feb", pl: 2000, avg: 900, inc: 400 },
-        { name: "Apr", pl: 400, avg: 400, inc: 500 },
-        { name: "Mar", pl: 3100, avg: 1300, inc: 700 },
-        { name: "May", pl: 200, avg: 100, inc: 200 },
-        { name: "Jun", pl: 600, avg: 400, inc: 300 },
-        { name: "Jul", pl: 500, avg: 90, inc: 100 },
-      ],
     };
   },
   watch: {

@@ -1,7 +1,14 @@
 <template>
   <div id="Errors" class="container" :class="{ isVisible }">
     <p>Hello</p>
-    <div><div>End</div></div>
+    <div>
+      <div>Error I: {{ errorsIndices }}</div>
+      <div v-for="error in errorsList" :key="error[0]">
+        <div>
+          <p>{{ error[0] + " | " + error[1] + " | " + error[2] }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -15,11 +22,77 @@ export default {
       default: String("nonDisplayed"),
       required: false,
     },
+    values: {
+      type: Object,
+      default: Object,
+      required: false,
+    },
+    channelSettings: {
+      type: Object,
+      default: Object,
+      required: false,
+    },
   },
   data: function () {
-    return {};
+    return {
+      errorsIndices: this.createIndicesArray(),
+      errorsList: [],
+    };
   },
-  methods: {},
+  watch: {
+    values: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.createErrorsList(val);
+      },
+    },
+  },
+
+  methods: {
+    createIndicesArray: function () {
+      let newIndices = [];
+      for (let i = 0; i < this.channelSettings.length; i++) {
+        if (this.channelSettings[i].iserror) {
+          newIndices.push(i);
+        }
+      }
+      return newIndices;
+    },
+    createErrorsList: function (data) {
+      let newErrorsList = new Array();
+      try {
+        for (let i = 0; i < data.length; i++) {
+          for (let errorI = 0; errorI < this.errorsIndices.length; errorI++) {
+            if (data[i].values[this.errorsIndices[errorI]] != "NIL") {
+              let errorTime = new Date(data[i].id);
+              newErrorsList.push([
+                errorTime.getDate() +
+                  "." +
+                  String(Number(errorTime.getMonth()) + 1) +
+                  "." +
+                  errorTime.getFullYear() +
+                  " " +
+                  errorTime.getHours() +
+                  ":" +
+                  errorTime.getMinutes() +
+                  ":" +
+                  errorTime.getSeconds() +
+                  "." +
+                  errorTime.getMilliseconds(),
+                this.channelSettings[this.errorsIndices[errorI]].name,
+                data[i].values[this.errorsIndices[errorI]],
+              ]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      this.errorsList = newErrorsList;
+    },
+  },
 };
 </script>
 

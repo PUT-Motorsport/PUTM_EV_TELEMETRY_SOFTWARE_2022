@@ -53,12 +53,7 @@ export default {
           id: `vuechart-${this.chartSettings.name.trim()}`,
           group: "carstats",
           animations: {
-            enabled: true,
-            easing: "linear",
-            dynamicAnimation: {
-              enabled: true,
-              speed: 400,
-            },
+            enabled: false,
           },
           toolbar: {
             show: true,
@@ -82,7 +77,7 @@ export default {
           type: "numeric",
           categories: this.chartData.timestamps,
           labels: {
-            show: true,
+            show: false,
             format: "HH:mm:ss.ff",
             formatter: function (value) {
               const currDate = new Date(value);

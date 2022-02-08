@@ -107,7 +107,10 @@ export default {
     this.connection = new WebSocket(`ws://${window.location.hostname}:8989/ws`);
     this.connection.onmessage = (event) => {
       try {
-        this.handleJSON(JSON.parse(event.data.toString()));
+        if (event.data.substring(0, 1) == "{") {
+          const parsedInput = JSON.parse(event.data.toString());
+          this.handleJSON(parsedInput);
+        }
       } catch (e) {
         console.error(e);
       }
@@ -129,7 +132,9 @@ export default {
     },
     openPort() {
       if (this.serialport.length > 0 && this.baud > 0) {
-        this.sendMessage("open " + this.serialport + " " + this.baud);
+        this.sendMessage(
+          "open " + this.serialport + " " + this.baud + " timed"
+        );
         document.cookie =
           "lastPort = " +
           String(this.serialport) +
@@ -191,7 +196,13 @@ export default {
           jsonInput = jsonInput["D"].replace(" ", "");
           if (jsonInput.length > 0) {
             try {
-              let vals = jsonInput.split("/").map((x) => Number(x));
+              let vals = jsonInput.split("/").map((x) => {
+                if (isNaN(x)) {
+                  return x;
+                } else {
+                  return Number(x);
+                }
+              });
               // Send new data do main Array
               // @arg The argument is an Array with new data
               this.$emit("serialOutput", { id: Date.now(), values: vals });

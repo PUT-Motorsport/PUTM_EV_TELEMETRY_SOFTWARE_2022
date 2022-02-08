@@ -25,10 +25,11 @@
                 <th class="MIN">MIN</th>
                 <th class="MAX">MAX</th>
                 <th class="SCALE">SCALE</th>
+                <th class="ERROR">IS ERROR</th>
               </tr>
             </thead>
             <tbody id="channels">
-              <tr v-for="item in settings" :key="item.id">
+              <tr v-for="item in settings" :key="item.id" class>
                 <td>{{ item.id }}</td>
                 <td>
                   <input
@@ -40,6 +41,15 @@
                 </td>
                 <td>
                   <input
+                    v-if="item.iserror"
+                    v-model="item.unit"
+                    class="input"
+                    type="text"
+                    placeholder="UNIT"
+                    disabled
+                  />
+                  <input
+                    v-else
                     v-model="item.unit"
                     class="input"
                     type="text"
@@ -48,6 +58,15 @@
                 </td>
                 <td>
                   <input
+                    v-if="item.iserror"
+                    v-model="item.precision"
+                    class="input"
+                    type="number"
+                    placeholder="PRECISION"
+                    disabled
+                  />
+                  <input
+                    v-else
                     v-model="item.precision"
                     class="input"
                     type="number"
@@ -56,6 +75,15 @@
                 </td>
                 <td>
                   <input
+                    v-if="item.iserror"
+                    v-model="item.min"
+                    class="input"
+                    type="number"
+                    placeholder="MIN"
+                    disabled
+                  />
+                  <input
+                    v-else
                     v-model="item.min"
                     class="input"
                     type="number"
@@ -64,6 +92,15 @@
                 </td>
                 <td>
                   <input
+                    v-if="item.iserror"
+                    v-model="item.max"
+                    class="input"
+                    type="number"
+                    placeholder="MAX"
+                    disabled
+                  />
+                  <input
+                    v-else
                     v-model="item.max"
                     class="input"
                     type="number"
@@ -71,13 +108,34 @@
                   />
                 </td>
                 <td>
-                  <select v-model="item.scale" class="select">
+                  <select
+                    v-if="item.iserror"
+                    v-model="item.scale"
+                    class="select"
+                    disabled
+                  >
                     <option value="" disabled selected hidden>
                       Select scale
                     </option>
                     <option value="lin">Linear</option>
                     <option value="log">logarithmic</option>
                   </select>
+                  <select v-else v-model="item.scale" class="select">
+                    <option value="" disabled selected hidden>
+                      Select scale
+                    </option>
+                    <option value="lin">Linear</option>
+                    <option value="log">logarithmic</option>
+                  </select>
+                </td>
+                <td>
+                  <div class="switch_box box_1">
+                    <input
+                      v-model="item.iserror"
+                      class="checkbox"
+                      type="checkbox"
+                    />
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -144,6 +202,7 @@ export default {
             min: null,
             max: null,
             scale: "",
+            iserror: false,
           };
         });
       }
@@ -292,6 +351,9 @@ export default {
 
             .SCALE {
               width: 3%;
+            }
+            .ERROR {
+              width: 1%;
             }
           }
           tbody {

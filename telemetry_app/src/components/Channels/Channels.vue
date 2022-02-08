@@ -11,11 +11,15 @@
       </thead>
       <tbody v-if="values.length > 0">
         <tr v-for="item in settings" :key="item.id">
-          <td>{{ item.name }}</td>
-          <td>
+          <td v-if="!item.iserror">{{ item.name }}</td>
+          <td v-if="!item.iserror">
             {{ values[0].values[item.id].toFixed(item.precision) + item.unit }}
           </td>
-          <td class="visibility" @click="changeVisibility(item.id)">
+          <td
+            v-if="!item.iserror"
+            class="visibility"
+            @click="changeVisibility(item.id)"
+          >
             <font-awesome-icon
               v-if="visible[item.id]"
               icon="eye"
@@ -25,7 +29,11 @@
               style="opacity: 0.7"
             />
           </td>
-          <td class="colorOpenWindow" @click="colorWindow(item.id)">
+          <td
+            v-if="!item.iserror"
+            class="colorOpenWindow"
+            @click="colorWindow(item.id)"
+          >
             <font-awesome-icon
               icon="square"
               :style="{ color: colors[item.id] }"
