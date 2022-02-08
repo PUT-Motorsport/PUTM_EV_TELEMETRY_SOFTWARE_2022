@@ -2,6 +2,12 @@
 
 Web Application that allows read and display data from CAN  
 
+
+## Running Aplication
+To start Backend and Frontend site run `start.sh`
+
+To manually run Backend and Frontend follow instructions below:
+
 To start Serial Websocket server:  
 On Windows x64: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_windows_amd64\serial-port-json-server.exe`  
 On Windows x32: Start Serial Websocket `.\serialWebsocket\serial-port-json-server-1.96_windows_386\serial-port-json-server.exe`  
@@ -37,7 +43,7 @@ To run server: `npm run serve`
 - Horizontal line thru all charts showing values
 - horizontal time axis
 - zooming whole application
-- Export to CSV
+- Export to CSV / JSON
 - Fast serial data processing
 - slower gui refreshrate
 
@@ -95,6 +101,7 @@ To run server: `npm run serve`
 - [Vue.js](https://vuejs.org/v2/guide/)
 - [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
 - ~~MySQL~~
-- [Serial Port Json Server](https://github.com/johnlauer/serial-port-json-server)
-- [Iconify GMI](https://icon-sets.iconify.design/ic/)
+- [Serial Port Json Server](https://github.com/chilipeppr/serial-port-json-server)
+- ~~[Iconify GMI](https://icon-sets.iconify.design/ic/)~~
+- [Fontawesome](https://fontawesome.com/docs/web/use-with/vue/)
 - [Vuese](https://vuese.org/)
