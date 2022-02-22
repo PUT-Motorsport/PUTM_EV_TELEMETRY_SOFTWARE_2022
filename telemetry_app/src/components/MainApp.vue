@@ -179,13 +179,13 @@ export default {
   display: none;
   opacity: 0;
 }
-#Errors {
-  grid-column: 1 / span 3;
-  grid-row: 2 / span 3;
+#errorsPage {
+  grid-column: 2 / span 2;
+  grid-row: 2 / span 2;
 }
 #errorFilters {
   grid-column: 1 / span 1;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
 }
 #navbar {
   z-index: 20;

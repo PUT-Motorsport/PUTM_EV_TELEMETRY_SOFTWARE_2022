@@ -4,16 +4,38 @@
       <div class="heading">
         <h3>Filters</h3>
       </div>
-      <div>
+      <div id="filtersValues">
         <table>
           <thead id="header">
             <tr>
-              <th class="ID">Name</th>
+              <th class="ID">Filter</th>
               <th class="NAME">Value</th>
               <th class="NAME"><font-awesome-icon icon="eye" /></th>
-              <th class="NAME"><font-awesome-icon icon="palette" /></th>
             </tr>
           </thead>
+          <tbody>
+            <tr>
+              <td>NAME</td>
+              <td>HWD</td>
+              <td>
+                <font-awesome-icon icon="eye" />
+              </td>
+            </tr>
+            <tr>
+              <td>Desc</td>
+              <td>Throttle</td>
+              <td>
+                <font-awesome-icon icon="eye" />
+              </td>
+            </tr>
+            <tr>
+              <td>Start</td>
+              <td>15:02</td>
+              <td>
+                <font-awesome-icon icon="eye" />
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -22,20 +44,23 @@
 
 <script>
 export default {
-  name: "Channels",
+  name: "ErrorsFilters",
   props: {},
   emits: [],
   data: function () {
     return {};
   },
   watch: {},
-
   methods: {},
 };
 </script>
 
 <style lang="scss" scoped>
+#errorFilters {
+  z-index: 20;
+}
 #filtersSection {
+  height: 100%;
   background-color: $color-background;
   border: 3px solid $color-accent;
   border-width: 0px 2px 2px 0px;
@@ -65,7 +90,7 @@ export default {
   }
 }
 
-#channels {
+#filtersValues {
   width: 100%;
   height: calc(100% - 32px);
 
@@ -112,12 +137,9 @@ export default {
           flex: 6;
         }
         th:nth-child(2) {
-          flex: 5;
+          flex: 6;
         }
         th:nth-child(3) {
-          flex: 1;
-        }
-        th:nth-child(4) {
           flex: 1;
         }
       }
@@ -138,12 +160,9 @@ export default {
           flex: 6;
         }
         td:nth-child(2) {
-          flex: 5;
+          flex: 6;
         }
         td:nth-child(3) {
-          flex: 1;
-        }
-        td:nth-child(4) {
           flex: 1;
         }
       }
@@ -161,11 +180,6 @@ export default {
           cursor: pointer;
         }
       }
-    }
-  }
-  .colorOpenWindow {
-    &:hover {
-      cursor: pointer;
     }
   }
 }
