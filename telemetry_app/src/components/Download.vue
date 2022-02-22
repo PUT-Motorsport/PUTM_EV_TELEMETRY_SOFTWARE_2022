@@ -1,10 +1,16 @@
 <template>
-  <button @click="download">Download</button>
+  <div id="downloadButtons">
+    <div>
+      <input id="selectFiles" type="file" />
+      <pre id="result" style="height:0px, width:0px; opacity:0;"></pre>
+    </div>
+    <button @click="upload">Upload</button>
+    <button @click="download">Download</button>
+  </div>
 </template>
 <script>
 export default {
   name: "Download",
-
   props: {
     //informations about channels
     data: {
@@ -13,15 +19,10 @@ export default {
       required: false,
     },
   },
+  emits: ["uploadedData"],
   data() {
     return {
-      cats: [
-        { name: "Alese", gender: "female", age: 10 },
-        { name: "Sammy", gender: "male", age: 12 },
-        { name: "Luna", gender: "female", age: 8 },
-        { name: "Cracker", gender: "male", age: 7 },
-        { name: "Pig", gender: "female", age: 6 },
-      ],
+      uploadData: new Array(),
     };
   },
   methods: {
@@ -52,8 +53,47 @@ export default {
       element.click();
       document.body.removeChild(element);
     },
+    upload() {
+      const files = document.getElementById("selectFiles").files;
+      if (files.length <= 0) {
+        return false;
+      }
+
+      const fr = new FileReader();
+
+      fr.onload = (e) => {
+        const result = JSON.parse(e.target.result);
+        const formatted = JSON.stringify(result, null, 2);
+        document.getElementById("result").innerHTML = formatted;
+        let output = JSON.parse(document.getElementById("result").innerHTML);
+        this.$emit("uploadedData", output);
+      };
+      fr.readAsText(files.item(0));
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#downloadButtons {
+  height: 26px;
+  background-color: $color-background;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  button {
+    background-color: $color-dark;
+    margin: 0px;
+    margin-right: 2px;
+    border: none;
+    font-size: $font-xs;
+    height: 100%;
+    background-color: $color-dark;
+    color: $color-white;
+    &:hover {
+      cursor: pointer;
+      color: $color-accent;
+    }
+  }
+}
+</style>
