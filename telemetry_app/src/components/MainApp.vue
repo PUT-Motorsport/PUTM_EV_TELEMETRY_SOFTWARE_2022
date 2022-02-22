@@ -7,7 +7,9 @@
           @clearInputs="clearData($event)"
         />
       </div>
-      <div id="downloadBar"><Download :data="inputData" /></div>
+      <div id="downloadBar">
+        <Download :data="inputData" @uploadedData="handleUploadData($event)" />
+      </div>
       <NavBar @signalSwitch="switchVisibility($event)" />
 
       <ChannelsSettings
@@ -170,6 +172,10 @@ export default {
         this.generalVisible = "";
       }
     },
+    handleUploadData(data) {
+      console.log(data);
+      this.inputData = data;
+    },
   },
 };
 </script>
@@ -254,8 +260,7 @@ export default {
 #downloadBar {
   position: absolute;
   bottom: 0;
-  right: 200px;
-  height: 20px;
+  right: 70px;
 }
 
 #connectionBar {
