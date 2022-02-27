@@ -1,3 +1,5 @@
+/* MAY Change TO UPLOT */
+
 <template>
   <div class="apexChartBox">
     <div
@@ -137,7 +139,7 @@ export default {
       series: [
         {
           name: this.chartSettings.name,
-          data: this.chartData.values,
+          data: this.chartData.vals,
         },
       ],
     };

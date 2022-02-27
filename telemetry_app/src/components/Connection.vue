@@ -133,7 +133,7 @@ export default {
     openPort() {
       if (this.serialport.length > 0 && this.baud > 0) {
         this.sendMessage(
-          "open " + this.serialport + " " + this.baud + " timed"
+          "open " + this.serialport + " " + this.baud /* + " timed" */
         );
         document.cookie =
           "lastPort = " +
@@ -203,9 +203,11 @@ export default {
                   return Number(x);
                 }
               });
+              const time = Date.now();
+              const newArray = vals.map((x) => ({ time: time, val: x }));
               // Send new data do main Array
-              // @arg The argument is an Array with new data
-              this.$emit("serialOutput", { id: Date.now(), values: vals });
+              // @arg The argument is current time and an Array with new data
+              this.$emit("serialOutput", newArray);
             } catch (e) {
               console.error(e);
             }

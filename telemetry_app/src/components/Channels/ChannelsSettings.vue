@@ -169,7 +169,7 @@ export default {
       deep: true,
       handler(val) {
         const size = Object.keys(Object.assign({}, val)).length;
-        if (size > 0) {
+        if (size > 1) {
           if (!this.receivedInput) {
             this.settings = this.createChannelsList(val);
             console.log(this.settings);
@@ -190,9 +190,8 @@ export default {
       }
       let channels;
 
-      if (inputData.length > 0) {
-        channels = inputData[0].values;
-        channels = Object.keys(channels);
+      if (inputData.length > 1) {
+        channels = Object.keys(inputData);
         channels = channels.map((x) => {
           return {
             id: x,
@@ -206,7 +205,6 @@ export default {
           };
         });
       }
-      console.log("NOT COOKIE");
       return channels;
     },
     closeWindow() {

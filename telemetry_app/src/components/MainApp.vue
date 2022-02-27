@@ -126,8 +126,18 @@ export default {
     //@arg incoming data
     addInput(incomingData) {
       try {
-        //TODO change to push
-        this.inputData.unshift(incomingData);
+        if (this.inputData.length < 1) {
+          this.inputData = incomingData.map(() => {
+            return {
+              timestamps: new Array(),
+              vals: new Array(),
+            };
+          });
+        }
+        for (let i = 0; i < incomingData.length; i++) {
+          this.inputData[i].timestamps.push(incomingData[i].time);
+          this.inputData[i].vals.push(incomingData[i].val);
+        }
       } catch (e) {
         console.error(e);
       }
