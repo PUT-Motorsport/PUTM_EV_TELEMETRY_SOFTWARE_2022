@@ -9,22 +9,23 @@
         class="singleChart"
         :style="{ 'border-color': channelsInfo.colors[index - 1] }"
       >
-        <ApexChart
+        <!-- <ApexChart
           ref="apexChart"
           :chart-data="values[index - 1]"
           :chart-settings="channelsInfo.settings[index - 1]"
           :chart-color="channelsInfo.colors[index - 1]"
-        />
+        /> -->
+        <UPlot :in-data="values[index - 1]"></UPlot>
       </div>
     </div>
   </div>
 </template>
 <script>
-import ApexChart from "./ApexCharts.vue";
+import UPlot from "./UPlot.vue";
 export default {
   name: "Charts",
   components: {
-    ApexChart,
+    UPlot,
   },
   props: {
     //informations about channels

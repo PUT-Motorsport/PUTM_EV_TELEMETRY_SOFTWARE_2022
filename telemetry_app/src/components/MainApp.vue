@@ -86,6 +86,8 @@ export default {
     return {
       //Whole data that comes on serial input
       inputData: new Array(),
+      //States of channels, errors etc.
+      stateData: new Array(),
       //If Settings Channel is hidden
       channelsSettingsHidden: true,
       //Channels Settings
@@ -127,16 +129,56 @@ export default {
     addInput(incomingData) {
       try {
         if (this.inputData.length < 1) {
-          this.inputData = incomingData.map(() => {
+          this.inputData = new Array(incomingData.length * 4);
+          this.inputData = this.inputData.map(() => {
             return {
               timestamps: new Array(),
               vals: new Array(),
             };
           });
         }
-        for (let i = 0; i < incomingData.length; i++) {
-          this.inputData[i].timestamps.push(incomingData[i].time);
-          this.inputData[i].vals.push(incomingData[i].val);
+        console.log(incomingData[0].val);
+        switch (incomingData[0].val) {
+          //high freq data
+          case 65:
+            for (let i = 1; i < incomingData.length; i++) {
+              this.inputData[i - 1].timestamps.push(incomingData[i].time);
+              this.inputData[i - 1].vals.push(incomingData[i].val);
+            }
+            break;
+          //mid freq data
+          case 66:
+            for (let i = 1; i < incomingData.length; i++) {
+              this.inputData[incomingData.length + i - 1].timestamps.push(
+                incomingData[i].time
+              );
+              this.inputData[incomingData.length + i - 1].vals.push(
+                incomingData[i].val
+              );
+            }
+            break;
+          //low freq data
+          case 67:
+            for (let i = 1; i < incomingData.length; i++) {
+              this.inputData[incomingData.length * 2 + i - 1].timestamps.push(
+                incomingData[i].time
+              );
+              this.inputData[incomingData.length * 2 + i - 1].vals.push(
+                incomingData[i].val
+              );
+            }
+            break;
+          //lowest freq data
+          case 68:
+            for (let i = 1; i < incomingData.length; i++) {
+              this.inputData[incomingData.length * 3 + i - 1].timestamps.push(
+                incomingData[i].time
+              );
+              this.inputData[incomingData.length * 3 + i - 1].vals.push(
+                incomingData[i].val
+              );
+            }
+            break;
         }
       } catch (e) {
         console.error(e);
