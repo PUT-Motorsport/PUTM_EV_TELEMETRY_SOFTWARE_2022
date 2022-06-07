@@ -4,12 +4,42 @@
     <div class="background">
       <div class="content standard-box light">
         <div class="top">
-          <div class="save">
-            <button class="button" @click="saveSettings()">
-              Save
-              <font-awesome-icon icon="floppy-disk" style="padding-left: 5px" />
-            </button>
+          <div class="actions">
+            <div class="action-button">
+              <button class="button" @click="saveSettings()">
+                Save
+                <font-awesome-icon
+                  icon="floppy-disk"
+                  style="padding-left: 5px"
+                />
+              </button>
+            </div>
+            <div class="action-button">
+              <button class="button" @click="downloadSettings()">
+                Download Settings
+                <font-awesome-icon
+                  icon="cloud-arrow-down"
+                  style="padding-left: 5px"
+                />
+              </button>
+            </div>
+            <div class="action-button">
+              <button class="button" @click="uploadSettings()">
+                Upload Settings
+                <font-awesome-icon
+                  icon="cloud-arrow-up"
+                  style="padding-left: 5px"
+                />
+              </button>
+            </div>
+            <div class="action-button">
+              <button class="button" @click="clearSettings()">
+                Clear
+                <font-awesome-icon icon="trash-can" style="padding-left: 5px" />
+              </button>
+            </div>
           </div>
+
           <div class="close" @click="closeWindow()">
             <font-awesome-icon :icon="['fas', 'xmark']" />
           </div>
@@ -181,9 +211,9 @@ export default {
   },
   methods: {
     createChannelsList(inputData) {
-      const cookie = this.getCookie("settings");
-      if (cookie != undefined) {
-        const lastSettings = JSON.parse(cookie);
+      const settings = this.getLocalStorage("settings");
+      if (settings != undefined) {
+        const lastSettings = JSON.parse(settings);
         if (lastSettings != undefined) {
           return lastSettings;
         }
@@ -214,19 +244,48 @@ export default {
     },
     saveSettings() {
       if (this.settings.length > 0) {
-        document.cookie =
-          "settings = " +
-          JSON.stringify(this.settings) +
-          ";" +
-          "expires=" +
-          new Date(
-            new Date().getTime() + 60 * 60 * 1000 * 24 * 365
-          ).toGMTString() +
-          ";path=/";
+        console.log(JSON.stringify(this.settings));
+        localStorage.setItem("settings", JSON.stringify(this.settings));
         //Send current channels settings to application
         //@arg Array with settings
         this.$emit("channelSettings", this.settings);
       }
+    },
+    clearSettings() {
+      //show browser confirm window
+      if (confirm("Are you sure you want to clear settings?")) {
+        localStorage.removeItem("settings");
+        this.settings = [];
+      }
+    },
+    downloadSettings() {
+      const blob = new Blob([JSON.stringify(this.settings)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "settings.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    },
+    uploadSettings() {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = JSON.parse(e.target.result);
+          this.settings = data;
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    },
+    getLocalStorage(name) {
+      return localStorage.getItem(name);
     },
     getCookie(name) {
       const value = `; ${document.cookie}`;
@@ -268,10 +327,16 @@ export default {
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
-        .save {
+        .actions {
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: start;
+          align-items: center;
+        }
+        .action-button {
           color: $color-background;
           font-size: $font-md;
-          padding: 10px;
+          padding-left: 10px;
         }
       }
 

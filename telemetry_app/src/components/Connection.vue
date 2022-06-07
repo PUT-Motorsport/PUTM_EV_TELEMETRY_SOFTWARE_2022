@@ -215,7 +215,7 @@ export default {
               const newArray = vals.map((x) => ({ time: time, val: x }));
               // Send new data do main Array
               // @arg The argument is current time and an Array with new data
-              console.log(newArray);
+              //console.log(newArray);
               this.$emit("serialOutput", newArray);
             } catch (e) {
               console.error(e);

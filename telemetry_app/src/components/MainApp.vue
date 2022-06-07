@@ -129,15 +129,11 @@ export default {
     addInput(incomingData) {
       try {
         if (this.inputData.length < 1) {
-          this.inputData = new Array(incomingData.length * 4);
-          this.inputData = this.inputData.map(() => {
-            return {
-              timestamps: new Array(),
-              vals: new Array(),
-            };
-          });
+          this.inputData = Array.from(
+            { length: incomingData.length * 4 - 4 },
+            () => ({ timestamps: new Array(), vals: new Array() })
+          );
         }
-        console.log(incomingData[0].val);
         switch (incomingData[0].val) {
           //high freq data
           case 65:
@@ -149,10 +145,10 @@ export default {
           //mid freq data
           case 66:
             for (let i = 1; i < incomingData.length; i++) {
-              this.inputData[incomingData.length + i - 1].timestamps.push(
+              this.inputData[incomingData.length + i - 2].timestamps.push(
                 incomingData[i].time
               );
-              this.inputData[incomingData.length + i - 1].vals.push(
+              this.inputData[incomingData.length + i - 2].vals.push(
                 incomingData[i].val
               );
             }
@@ -160,10 +156,10 @@ export default {
           //low freq data
           case 67:
             for (let i = 1; i < incomingData.length; i++) {
-              this.inputData[incomingData.length * 2 + i - 1].timestamps.push(
+              this.inputData[incomingData.length * 2 + i - 3].timestamps.push(
                 incomingData[i].time
               );
-              this.inputData[incomingData.length * 2 + i - 1].vals.push(
+              this.inputData[incomingData.length * 2 + i - 3].vals.push(
                 incomingData[i].val
               );
             }
@@ -171,10 +167,10 @@ export default {
           //lowest freq data
           case 68:
             for (let i = 1; i < incomingData.length; i++) {
-              this.inputData[incomingData.length * 3 + i - 1].timestamps.push(
+              this.inputData[incomingData.length * 3 + i - 4].timestamps.push(
                 incomingData[i].time
               );
-              this.inputData[incomingData.length * 3 + i - 1].vals.push(
+              this.inputData[incomingData.length * 3 + i - 4].vals.push(
                 incomingData[i].val
               );
             }
