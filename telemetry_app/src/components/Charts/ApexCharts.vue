@@ -1,3 +1,5 @@
+/* MAY Change TO UPLOT */
+
 <template>
   <div class="apexChartBox">
     <div
@@ -48,6 +50,8 @@ export default {
       nameColor: "white",
       chartOptions: {
         colors: [this.chartColor],
+        dataLabels: { enabled: false },
+        markers: { size: 0 },
         chart: {
           foreColor: "#ffffff",
           id: `vuechart-${this.chartSettings.name.trim()}`,
@@ -137,7 +141,7 @@ export default {
       series: [
         {
           name: this.chartSettings.name,
-          data: this.chartData.values,
+          data: this.chartData.vals,
         },
       ],
     };

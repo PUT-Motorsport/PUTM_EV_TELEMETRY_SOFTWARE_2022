@@ -4,7 +4,7 @@
       <thead>
         <tr>
           <th class="ID">Name</th>
-          <th class="NAME">Description</th>
+          <th class="NAME">Type</th>
           <th class="NAME">Time</th>
         </tr>
       </thead>
@@ -52,7 +52,9 @@ export default {
       immediate: true,
       deep: true,
       handler(val) {
-        this.createErrorsList(val);
+        if (val.length > 0) {
+          this.createErrorsList(val);
+        }
       },
     },
   },
@@ -70,10 +72,10 @@ export default {
     createErrorsList: function (data) {
       let newErrorsList = new Array();
       try {
-        for (let i = 0; i < data.length; i++) {
-          for (let errorI = 0; errorI < this.errorsIndices.length; errorI++) {
-            if (data[i].values[this.errorsIndices[errorI]] != "NIL") {
-              let errorTime = new Date(data[i].id);
+        this.errorsIndices.every((indice) => {
+          for (let i = 0; i < data[indice].vals.length; i++) {
+            if (data[indice].vals[i] != "NIL") {
+              let errorTime = new Date(data[indice].timestamps[i]);
               newErrorsList.push([
                 errorTime.getDate() +
                   "." +
@@ -88,12 +90,12 @@ export default {
                   errorTime.getSeconds() +
                   "." +
                   errorTime.getMilliseconds(),
-                this.channelSettings[this.errorsIndices[errorI]].name,
-                data[i].values[this.errorsIndices[errorI]],
+                this.channelSettings[indice].name,
+                data[indice].vals[i],
               ]);
             }
           }
-        }
+        });
       } catch (error) {
         console.error(error);
       }

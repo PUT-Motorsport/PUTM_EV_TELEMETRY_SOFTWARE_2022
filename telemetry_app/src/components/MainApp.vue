@@ -86,6 +86,8 @@ export default {
     return {
       //Whole data that comes on serial input
       inputData: new Array(),
+      //States of channels, errors etc.
+      stateData: new Array(),
       //If Settings Channel is hidden
       channelsSettingsHidden: true,
       //Channels Settings
@@ -126,8 +128,54 @@ export default {
     //@arg incoming data
     addInput(incomingData) {
       try {
-        //TODO change to push
-        this.inputData.unshift(incomingData);
+        if (this.inputData.length < 1) {
+          this.inputData = Array.from(
+            { length: incomingData.length * 4 - 4 },
+            () => ({ timestamps: new Array(), vals: new Array() })
+          );
+        }
+        switch (incomingData[0].val) {
+          //high freq data
+          case 65:
+            for (let i = 1; i < incomingData.length; i++) {
+              this.inputData[i - 1].timestamps.push(incomingData[i].time);
+              this.inputData[i - 1].vals.push(incomingData[i].val);
+            }
+            break;
+          //mid freq data
+          case 66:
+            for (let i = 1; i < incomingData.length; i++) {
+              this.inputData[incomingData.length + i - 2].timestamps.push(
+                incomingData[i].time
+              );
+              this.inputData[incomingData.length + i - 2].vals.push(
+                incomingData[i].val
+              );
+            }
+            break;
+          //low freq data
+          case 67:
+            for (let i = 1; i < incomingData.length; i++) {
+              this.inputData[incomingData.length * 2 + i - 3].timestamps.push(
+                incomingData[i].time
+              );
+              this.inputData[incomingData.length * 2 + i - 3].vals.push(
+                incomingData[i].val
+              );
+            }
+            break;
+          //lowest freq data
+          case 68:
+            for (let i = 1; i < incomingData.length; i++) {
+              this.inputData[incomingData.length * 3 + i - 4].timestamps.push(
+                incomingData[i].time
+              );
+              this.inputData[incomingData.length * 3 + i - 4].vals.push(
+                incomingData[i].val
+              );
+            }
+            break;
+        }
       } catch (e) {
         console.error(e);
       }

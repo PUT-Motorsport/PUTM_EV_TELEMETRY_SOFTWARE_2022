@@ -13,7 +13,11 @@
         <tr v-for="item in settings" :key="item.id">
           <td v-if="!item.iserror">{{ item.name }}</td>
           <td v-if="!item.iserror">
-            {{ values[0].values[item.id].toFixed(item.precision) + item.unit }}
+            {{
+              Number(
+                values[item.id].vals[values[item.id].vals.length - 1]
+              ).toFixed(item.precision) + item.unit
+            }}
           </td>
           <td
             v-if="!item.iserror"

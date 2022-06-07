@@ -15,6 +15,8 @@
     "apexcharts": "^3.32.1",
     "chart.js": "^3.0.2",
     "core-js": "^3.6.5",
+    "uplot": "^1.6.19",
+    "uplot-vue": "^1.1.1",
     "vue": "^3.0.0",
     "vue-blob-json-csv": "^0.1.7",
     "vue-chart-3": "^3.0.7",

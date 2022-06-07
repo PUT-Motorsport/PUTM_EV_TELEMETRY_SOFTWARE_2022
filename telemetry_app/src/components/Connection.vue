@@ -133,7 +133,7 @@ export default {
     openPort() {
       if (this.serialport.length > 0 && this.baud > 0) {
         this.sendMessage(
-          "open " + this.serialport + " " + this.baud + " timed"
+          "open " + this.serialport + " " + this.baud + " nodemcu"
         );
         document.cookie =
           "lastPort = " +
@@ -193,7 +193,15 @@ export default {
     handleJSON(jsonInput) {
       try {
         if (typeof jsonInput["D"] != "undefined") {
-          jsonInput = jsonInput["D"].replace(" ", "");
+          //jsonInput = jsonInput["D"].replace("\u0000", "");
+          //I know this is fuckin mess
+          jsonInput = jsonInput["D"]
+            .replaceAll("\u0000", "")
+            .replaceAll("\x00", "")
+            .replaceAll(" ", "")
+            .replaceAll("\n", "")
+            .replaceAll("\r", "");
+          //console.log(jsonInput);
           if (jsonInput.length > 0) {
             try {
               let vals = jsonInput.split("/").map((x) => {
@@ -203,9 +211,12 @@ export default {
                   return Number(x);
                 }
               });
+              const time = Date.now();
+              const newArray = vals.map((x) => ({ time: time, val: x }));
               // Send new data do main Array
-              // @arg The argument is an Array with new data
-              this.$emit("serialOutput", { id: Date.now(), values: vals });
+              // @arg The argument is current time and an Array with new data
+              //console.log(newArray);
+              this.$emit("serialOutput", newArray);
             } catch (e) {
               console.error(e);
             }

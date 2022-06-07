@@ -12,6 +12,9 @@ import {
   faEyeSlash,
   faPalette,
   faSquare,
+  faTrashCan,
+  faCloudArrowUp,
+  faCloudArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faXmark);
@@ -23,6 +26,9 @@ library.add(faEye);
 library.add(faEyeSlash);
 library.add(faPalette);
 library.add(faSquare);
+library.add(faTrashCan);
+library.add(faCloudArrowUp);
+library.add(faCloudArrowDown);
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
