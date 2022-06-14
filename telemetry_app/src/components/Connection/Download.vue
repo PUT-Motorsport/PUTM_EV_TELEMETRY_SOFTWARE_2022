@@ -1,9 +1,9 @@
 <template>
   <div id="downloadButtons">
-    <div>
+    <!-- <div>
       <input id="selectFiles" type="file" />
       <pre id="result" style="height:0px, width:0px; opacity:0;"></pre>
-    </div>
+    </div> -->
     <button @click="upload">Upload</button>
     <button @click="download">Download</button>
   </div>
@@ -54,6 +54,20 @@ export default {
       document.body.removeChild(element);
     },
     upload() {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = JSON.parse(e.target.result);
+          this.$emit("uploadedData", data);
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    },
+    /* upload() {
       const files = document.getElementById("selectFiles").files;
       if (files.length <= 0) {
         return false;
@@ -69,7 +83,7 @@ export default {
         this.$emit("uploadedData", output);
       };
       fr.readAsText(files.item(0));
-    },
+    }, */
   },
 };
 </script>
