@@ -10,6 +10,9 @@
       <div id="downloadBar">
         <Download :data="inputData" @uploadedData="handleUploadData($event)" />
       </div>
+      <div id="frameSettings">
+        <FrameSettings />
+      </div>
       <NavBar @signalSwitch="switchVisibility($event)" />
 
       <ChannelsSettings
@@ -64,10 +67,11 @@ import Charts from "./Charts/Charts.vue";
 import Channels from "./Channels/Channels.vue";
 import ChannelsSettings from "./Channels/ChannelsSettings.vue";
 import NavBar from "./NavBar/NavBar.vue";
-import Connection from "./Connection.vue";
+import Connection from "./Connection/Connection.vue";
 import Errors from "./Errors/Errors.vue";
 import ErrorsFilters from "./Errors/ErrorsFilters.vue";
-import Download from "./Download.vue";
+import Download from "./Connection/Download.vue";
+import FrameSettings from "./Connection/FrameSettings.vue";
 
 export default {
   name: "MainApp",
@@ -81,6 +85,7 @@ export default {
     Errors,
     ErrorsFilters,
     Download,
+    FrameSettings,
   },
   data: function () {
     return {
@@ -127,52 +132,57 @@ export default {
     //Adding new data to Array
     //@arg incoming data
     addInput(incomingData) {
+      //Hardcoded Lengths of packages without id no. [65,66,67,68]
+      const packageLength = [14, 10, 11, 6];
+      const sumLength = packageLength.reduce((a, b) => a + b);
+
       try {
         if (this.inputData.length < 1) {
-          this.inputData = Array.from(
-            { length: incomingData.length * 4 - 4 },
-            () => ({ timestamps: new Array(), vals: new Array() })
-          );
+          this.inputData = Array.from({ length: sumLength }, () => ({
+            timestamps: new Array(),
+            vals: new Array(),
+          }));
         }
         switch (incomingData[0].val) {
           //high freq data
+
           case 65:
-            for (let i = 1; i < incomingData.length; i++) {
+            for (let i = 1; i <= packageLength[0]; i++) {
               this.inputData[i - 1].timestamps.push(incomingData[i].time);
               this.inputData[i - 1].vals.push(incomingData[i].val);
             }
             break;
           //mid freq data
           case 66:
-            for (let i = 1; i < incomingData.length; i++) {
-              this.inputData[incomingData.length + i - 2].timestamps.push(
+            for (let i = 1; i <= packageLength[1]; i++) {
+              this.inputData[packageLength[0] + i - 1].timestamps.push(
                 incomingData[i].time
               );
-              this.inputData[incomingData.length + i - 2].vals.push(
+              this.inputData[packageLength[0] + i - 1].vals.push(
                 incomingData[i].val
               );
             }
             break;
           //low freq data
           case 67:
-            for (let i = 1; i < incomingData.length; i++) {
-              this.inputData[incomingData.length * 2 + i - 3].timestamps.push(
-                incomingData[i].time
-              );
-              this.inputData[incomingData.length * 2 + i - 3].vals.push(
-                incomingData[i].val
-              );
+            for (let i = 1; i <= packageLength[2]; i++) {
+              this.inputData[
+                packageLength[0] + packageLength[1] + i - 1
+              ].timestamps.push(incomingData[i].time);
+              this.inputData[
+                packageLength[0] + packageLength[1] + i - 1
+              ].vals.push(incomingData[i].val);
             }
             break;
           //lowest freq data
           case 68:
-            for (let i = 1; i < incomingData.length; i++) {
-              this.inputData[incomingData.length * 3 + i - 4].timestamps.push(
-                incomingData[i].time
-              );
-              this.inputData[incomingData.length * 3 + i - 4].vals.push(
-                incomingData[i].val
-              );
+            for (let i = 1; i <= packageLength[3]; i++) {
+              this.inputData[
+                packageLength[0] + packageLength[1] + packageLength[2] + i - 1
+              ].timestamps.push(incomingData[i].time);
+              this.inputData[
+                packageLength[0] + packageLength[1] + packageLength[2] + i - 1
+              ].vals.push(incomingData[i].val);
             }
             break;
         }
@@ -303,6 +313,12 @@ export default {
   grid-template-rows: [heading] 30px [first-row] 3fr [second-row] 30px [third-row] 1fr [bottom-bar] 28px;
   column-gap: 2px;
   row-gap: 2px;
+}
+
+#frameSettings {
+  position: absolute;
+  bottom: 0;
+  right: 219px;
 }
 
 #downloadBar {
